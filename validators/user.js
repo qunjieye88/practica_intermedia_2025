@@ -21,4 +21,15 @@ const validatorLogin = [
         return validateResults(req, res, next)
     }
 ]
-module.exports = { validatorRegister, validatorLogin,validatorValidator }
+const validatorUpdate = [
+    check("email").exists().notEmpty().isEmail(),
+    check("name").optional().notEmpty().isString(),
+    check("surnames").optional().notEmpty().isString(),
+    check("nif").optional().notEmpty().matches(/^[0-9]{8}[A-Z]$/),
+    (req, res, next) => {
+        console.log("hola")
+        return validateResults(req, res, next)
+    }
+]
+
+module.exports = { validatorRegister, validatorLogin,validatorValidator ,validatorUpdate}

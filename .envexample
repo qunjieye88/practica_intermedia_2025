@@ -1,0 +1,17 @@
+PORT = puerto a conectar
+
+DB_URI = url de base de datos
+
+PUBLIC_URL = url publica
+
+PINATA_GATEWAY_URL = url de pinata
+
+PINATA_KEY =  llave publica de pinata
+
+PINATA_SECRET = llave privada de pinata
+
+JWT = token de jwt
+
+api_key= llave de jwt
+
+JWT_SECRET = llave privada de jwt

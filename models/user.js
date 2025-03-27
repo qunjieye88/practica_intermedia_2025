@@ -1,7 +1,12 @@
 const mongoose = require("mongoose")
+const mongooseDelete = require("mongoose-delete")
 
 const UserScheme = new mongoose.Schema(
     {   
+        url:String,
+        filename: {
+            type: String
+        },
         address: {
             street: String,
             number: Number,
@@ -32,7 +37,7 @@ const UserScheme = new mongoose.Schema(
         },
         role: {
             type:String,
-            enum: ["user", "admin"],
+            enum: ["user", "admin","guest"],
             default: "user"
         },
         name: {
@@ -53,4 +58,6 @@ const UserScheme = new mongoose.Schema(
         versionKey: false
     }
 )
+
+UserScheme.plugin(mongooseDelete, {overrideMethods: "all"})
 module.exports = mongoose.model("users", UserScheme) 

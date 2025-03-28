@@ -274,7 +274,7 @@ const createInvitation = async (req, res) => {
         if (userCompany) {
             const password = await encrypt(req.password);
             const emailCode = Math.floor(100000 + Math.random() * 900000);
-            const body = { ...req, password, emailCode };
+            const body = { ...req, password, emailCode,role:"guest" };
             const newUser = await UserModel.create(body);
             const data = {
                 token: await tokenSign(newUser),

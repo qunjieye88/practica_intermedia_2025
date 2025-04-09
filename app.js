@@ -4,6 +4,8 @@ require("dotenv").config();
 
 const dbConnect = require("./config/mongo");
 const routerUser = require("./routers/user");
+const swaggerUi = require("swagger-ui-express")
+const swaggerSpecs = require("./docs/swagger")
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,8 +22,16 @@ app.use("/api/user", routerUser);
 dbConnect();
 
 // Iniciar el servidor
-app.listen(port, () => {
-    console.log(`Servidor escuchando en el puerto ${port}`);
-});
+const server = app.listen(port, () => {
+    console.log(`Escuchando en el puerto ${port}`)
+})
 
+app.use("/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpecs)
+)
+
+module.exports = {
+    app, server
+}
 

@@ -8,11 +8,11 @@ Content-Type: application/json
 
 ###
 put http://localhost:3000/api/user/validation
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U1Mzc4YWNkMDc5ZmY4MWRhZTI0OTkiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzA3NTIxMCwiZXhwIjoxNzQzMTYxNjEwfQ.CLYicYU9wUCNmmlGG0WMeWgzSZjSDAvc80wOAQCMi5k
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y2MzY2M2MwMTYxZjYzMzBhNDNhOGEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDE4OTAyNywiZXhwIjoxNzQ0Mjc1NDI3fQ.pK9wFSEpmmwTjE4mo2C9LcuoQlnMuLKYFNYdPLHTxmo
 Content-Type: application/json
 
 {
-    "code": "293038"
+    "code": "707151"
 }
 
 ###
@@ -20,33 +20,35 @@ POST http://localhost:3000/api/user/login
 Content-Type: application/json
 
 {
-    "email": "qunjieye@example.com",
+    "email": "correo@example.com",
     "password": "12345678"
 }
 
 ###
 put http://localhost:3000/api/user/register
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U1Mzc4YWNkMDc5ZmY4MWRhZTI0OTkiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzA3NTIxMCwiZXhwIjoxNzQzMTYxNjEwfQ.CLYicYU9wUCNmmlGG0WMeWgzSZjSDAvc80wOAQCMi5k
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y2MjA5ZTg4MjU4MDA0NjQ3YTVmNzgiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDE4Njc4MCwiZXhwIjoxNzQ0MjczMTgwfQ.R9koSsJws10shetxHIkG8YGB6WCr-lppKwYgi-e8q1Y
 Content-Type: application/json
 
 {
-    "email": "correo@example.com",
+    "email": "correo1@example.com",
     "name": "qunjieye",
-    "nif": "40000000W"
+    "nif": "40000000Q"
 }
 
 ###
 patch http://localhost:3000/api/user/company
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U1Mzc4YWNkMDc5ZmY4MWRhZTI0OTkiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzA3NTIxMCwiZXhwIjoxNzQzMTYxNjEwfQ.CLYicYU9wUCNmmlGG0WMeWgzSZjSDAvc80wOAQCMi5k
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y2MjA5ZTg4MjU4MDA0NjQ3YTVmNzgiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDE4Njc4MCwiZXhwIjoxNzQ0MjczMTgwfQ.R9koSsJws10shetxHIkG8YGB6WCr-lppKwYgi-e8q1Y
 Content-Type: application/json
 
 {
   "company": {
-    "street": "Carlos V",
+    "street": "Carlos s67",
     "number": 22,
     "postal": 28936,
     "city": "Móstoles",
-    "province": "Madrid"
+    "province": "Madrid",
+    "name": "qunjieyse",
+    "cif": "40000000Q"
   }
 }
 
@@ -54,7 +56,7 @@ Content-Type: application/json
 
 ###
 PATCH  http://localhost:3000/api/user/logo
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U1MzE0MTdjYzllZGJjYzc0ZjA0YmUiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzA3NDEyNCwiZXhwIjoxNzQzMTYwNTI0fQ.FpkIQoki6UgggS7RvcdaFW4fHKV2QE18uDMVTxKe3Fw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y2MjA5ZTg4MjU4MDA0NjQ3YTVmNzgiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDE4Njc4MCwiZXhwIjoxNzQ0MjczMTgwfQ.R9koSsJws10shetxHIkG8YGB6WCr-lppKwYgi-e8q1Y
 Content-Type: multipart/form-data; boundary=boundary123
 
 --boundary123
@@ -66,13 +68,13 @@ Content-Type: image/jpeg
 
 ###
 get http://localhost:3000/api/user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U1MzE0MTdjYzllZGJjYzc0ZjA0YmUiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzA3NDEyNCwiZXhwIjoxNzQzMTYwNTI0fQ.FpkIQoki6UgggS7RvcdaFW4fHKV2QE18uDMVTxKe3Fw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y2MzY2M2MwMTYxZjYzMzBhNDNhOGEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDE4OTAyNywiZXhwIjoxNzQ0Mjc1NDI3fQ.pK9wFSEpmmwTjE4mo2C9LcuoQlnMuLKYFNYdPLHTxmo
 Content-Type: application/json
 
 
 ###
-delete http://localhost:3000/api/user?soft=true
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U1MzFiODdjYzllZGJjYzc0ZjA0Y2YiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzA3MzcyMCwiZXhwIjoxNzQzMTYwMTIwfQ.bpS_ueQeJrwfiB6npIDbKLnU31XmQUaE0gmbYHJiEJo
+delete http://localhost:3000/api/user?soft=false
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y2MzY2M2MwMTYxZjYzMzBhNDNhOGEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDE4OTAyNywiZXhwIjoxNzQ0Mjc1NDI3fQ.pK9wFSEpmmwTjE4mo2C9LcuoQlnMuLKYFNYdPLHTxmo
 Content-Type: application/json
 
 
@@ -99,14 +101,13 @@ post http://localhost:3000/api/user/invite
 Content-Type: application/json
 
 {
-    "email": "qunjieyee@example.com",
+    "email": "invitado@example.com",
     "password": "12345678",
     "company": {
-      "name":"qunjieyeje"
+      "name":"qunjieye"
     }
 }
 
-
-
-
-
+###
+get http://localhost:3000/api/user/users
+Content-Type: application/json

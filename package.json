@@ -4,7 +4,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node --watch app.js",
-    "test": "cross-env NODE_ENV=text jest --verbose"
+    "test": "cross-env NODE_ENV=test jest --verbose"
   },
   "keywords": [],
   "author": "",

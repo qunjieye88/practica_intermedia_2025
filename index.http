@@ -1,40 +1,43 @@
+//Crear una cuenta de usuario: POST /api/user/register
 POST http://localhost:3000/api/user/register
 Content-Type: application/json
 
 {
-    "email": "correo@example.com",
+    "email": "correo3@example.com",
     "password": "12345678"
 }
-
+//Validar el correo a través de un código recibido en el mismo:
+//PUT /api/user/validation
 ###
 put http://localhost:3000/api/user/validation
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y2MzY2M2MwMTYxZjYzMzBhNDNhOGEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDE4OTAyNywiZXhwIjoxNzQ0Mjc1NDI3fQ.pK9wFSEpmmwTjE4mo2C9LcuoQlnMuLKYFNYdPLHTxmo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA2NzMzYjE4ZWFmZTA4YjVkYmM4YmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTI1MzE3OSwiZXhwIjoxNzQ1MzM5NTc5fQ.PKgPIB8jGyP63KtUjzhCtm0bjmPbWRzVfOm_zOyVtEE
 Content-Type: application/json
 
 {
-    "code": "707151"
+    "code": "800169"
 }
-
+//Login en la aplicación (devuelve un token de sesión): POST /api/user/login
 ###
 POST http://localhost:3000/api/user/login
 Content-Type: application/json
 
 {
-    "email": "correo@example.com",
+    "email": "correo2@example.com",
     "password": "12345678"
 }
-
+//Introducir datos personales del usuario: PATH o PUT /api/user
 ###
 put http://localhost:3000/api/user/register
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y2MjA5ZTg4MjU4MDA0NjQ3YTVmNzgiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDE4Njc4MCwiZXhwIjoxNzQ0MjczMTgwfQ.R9koSsJws10shetxHIkG8YGB6WCr-lppKwYgi-e8q1Y
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA2NzMzYjE4ZWFmZTA4YjVkYmM4YmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTI1MzE3OSwiZXhwIjoxNzQ1MzM5NTc5fQ.PKgPIB8jGyP63KtUjzhCtm0bjmPbWRzVfOm_zOyVtEE
 Content-Type: application/json
 
 {
     "email": "correo1@example.com",
     "name": "qunjieye",
-    "nif": "40000000Q"
+    "nif": "40000000Q",
+    "role":"admin"
 }
-
+//Introducir datos de compañía: PATCH /api/user/company
 ###
 patch http://localhost:3000/api/user/company
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y2MjA5ZTg4MjU4MDA0NjQ3YTVmNzgiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDE4Njc4MCwiZXhwIjoxNzQ0MjczMTgwfQ.R9koSsJws10shetxHIkG8YGB6WCr-lppKwYgi-e8q1Y
@@ -71,13 +74,13 @@ get http://localhost:3000/api/user
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y2MzY2M2MwMTYxZjYzMzBhNDNhOGEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDE4OTAyNywiZXhwIjoxNzQ0Mjc1NDI3fQ.pK9wFSEpmmwTjE4mo2C9LcuoQlnMuLKYFNYdPLHTxmo
 Content-Type: application/json
 
-
+//Eliminar usuario física (hard delete) y lógicamente (soft delete)
 ###
 delete http://localhost:3000/api/user?soft=false
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y2MzY2M2MwMTYxZjYzMzBhNDNhOGEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDE4OTAyNywiZXhwIjoxNzQ0Mjc1NDI3fQ.pK9wFSEpmmwTjE4mo2C9LcuoQlnMuLKYFNYdPLHTxmo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y2MzdkMzllNmY3MTMzYmJmNDljMTEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDE4OTM5NSwiZXhwIjoxNzQ0Mjc1Nzk1fQ.0pVvCK6H0Ry9WXk8ev3fPJpRIE-DzoI8npsoXK6J0_s
 Content-Type: application/json
 
-
+//Recuperar contraseña
 ###
 get http://localhost:3000/api/user/codePassword
 Content-Type: application/json
@@ -95,7 +98,7 @@ Content-Type: application/json
     "code": 632982,
     "password" : "12345678"
 }
-
+//Invitar a otro usuario como parte de tu compañía
 ###
 post http://localhost:3000/api/user/invite
 Content-Type: application/json
@@ -111,3 +114,24 @@ Content-Type: application/json
 ###
 get http://localhost:3000/api/user/users
 Content-Type: application/json
+
+###
+delete http://localhost:3000/api/user/deleteAllUsers
+Content-Type: application/json
+
+###
+post http://localhost:3000/api/client
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA2NzMzYjE4ZWFmZTA4YjVkYmM4YmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTI1MzE3OSwiZXhwIjoxNzQ1MzM5NTc5fQ.PKgPIB8jGyP63KtUjzhCtm0bjmPbWRzVfOm_zOyVtEE
+Content-Type: application/json
+
+{
+  "name": "Juan",
+  "cif": "D52921210",
+  "address": {
+    "street": "Carlos V",
+    "number": 22,
+    "postal": 28936,
+    "city": "Móstoles",
+    "province": "Madrid"
+    }
+}

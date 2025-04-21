@@ -1,6 +1,6 @@
 const UserModel = require("../models/user.js");
 const { matchedData } = require("express-validator")
-const { encrypt, compare } = require("../utils/handlePassword")
+const { encrypt, compare ,hola} = require("../utils/handlePassword")
 const { tokenSign, verifyToken } = require("../utils/handleJwt.js")
 const { uploadToPinata } = require("../utils/handleUploadIPFS.js");
 
@@ -80,7 +80,6 @@ const loginUser = async (req, res) => {
 
 
 const updateUser = async (req, res) => {
-
     try {
         const user = req.user
         req = matchedData(req);
@@ -139,7 +138,6 @@ const patchLogo = async (req, res) => {
         }
     } catch (err) {
         res.status(500).send("ERROR_UPLOAD_COMPANY_IMAGE")
-        //handleHttpError(res, "ERROR_UPLOAD_COMPANY_IMAGE")
     }
 }
 
@@ -251,9 +249,14 @@ const getUsers = async (req, res) => {
     //const existingUser = await UserModel.deleteMany({})
     res.status(200).send(existingUser);
 }
+const deleteAllUsers = async (req, res) => {
+    const existingUser = await UserModel.deleteMany({})
+    res.status(200).send(existingUser);
+}
 module.exports = {
     registerCtrl, validatorUser, loginUser,
     updateUser, patchLogo,
     getUser, deleteUser, getCodePassword,
-    getPassword, patchCompany, createInvitation, getUsers
+    getPassword, patchCompany, createInvitation,
+    getUsers,deleteAllUsers
 }

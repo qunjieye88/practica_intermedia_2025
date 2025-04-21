@@ -4,6 +4,7 @@ require("dotenv").config();
 
 const dbConnect = require("./config/mongo");
 const routerUser = require("./routers/user");
+const routerClient = require("./routers/client")
 const swaggerUi = require("swagger-ui-express")
 const swaggerSpecs = require("./docs/swagger")
 
@@ -17,6 +18,7 @@ app.use(express.static("storage"));
 
 // Rutas
 app.use("/api/user", routerUser);
+app.use("/api/client", routerClient);
 
 // Conectar a la base de datos
 dbConnect();

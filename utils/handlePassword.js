@@ -2,6 +2,7 @@ const bcryptjs = require("bcryptjs")
 const encrypt = async (clearPassword) => {
     // El número "Salt" otorga aleatoriedad a la función hash al combinarla con la password en claro.
     const hash = await bcryptjs.hash(clearPassword, 10)
+
     return hash
 }
 const compare = async (clearPassword, hashedPassword) => {
@@ -9,4 +10,8 @@ const compare = async (clearPassword, hashedPassword) => {
     const result = await bcryptjs.compare(clearPassword, hashedPassword)
     return result
 }
-module.exports = { encrypt, compare }
+
+const hola = ()=>{
+    console.log("hola")
+}
+module.exports = { encrypt, compare,hola }

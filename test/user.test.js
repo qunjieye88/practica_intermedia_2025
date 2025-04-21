@@ -1,33 +1,65 @@
 const supertest = require('supertest')
 const { app, server } = require('../app.js')
 const mongoose = require('mongoose');
-
-const { encrypt } = require('../utils/handlePassword.js')
-const { tokenSign } = require('../utils/handleJwt')
 const UserModel = require("../models/user.js");
+
+const findUserEmail = requite("../utils/handleUser.js")
+
+const api = supertest(app);
 
 beforeAll(async () => {
     await new Promise((resolve) => mongoose.connection.once('connected', resolve));
-});
-const api = supertest(app);
-it('should get all users', async () => {
-    await api.get('/api/user/users')
+
+    await api.delete('/api/user/deleteAllUsers')
         .expect(200)
         .expect('Content-Type', /application\/json/)
-})
+
+
+});
+
+
+
+
+
+it('should register a user', async () => {
+    //const spy = jest.spyOn(pass, 'encrypt');
+    const initialUsers = {
+        email: "marcos@correo.es",
+        password: "mipassword"
+    }
+    const response = await api.post('/api/user/register')
+        .send(initialUsers)
+        .expect(201)
+        .expect('Content-Type', /application\/json/); +
+            expect(response.body).toHaveProperty('token');
+    expect(response.body).toHaveProperty('user');
+    //expect(spy).toHaveBeenCalled();
+    //spy.mockRestore();
+});
+
+
+it('should validate a user', async () => {
+    //const spy = jest.spyOn(Password, 'encrypt');
+    const initialUsers = {
+        email: "marcos@correo.es",
+        password: "mipassword"
+    }
+    const response = await api.post('/api/user/register')
+        .send(initialUsers[0])
+        .expect(201)
+        .expect('Content-Type', /application\/json/); +
+            expect(response.body).toHaveProperty('token');
+    expect(response.body).toHaveProperty('user');
+    //expect(spy).toHaveBeenCalled();
+    //spy.mockRestore();
+});
+
 afterAll(async () => {
     server.close()
     await mongoose.connection.close();
 })
 
-const initialUsers = [
-    {
-        name: "Marcos",
-        age: 23,
-        email: "marcos@correo.es",
-        password: "mipassword"
-    }
-]
+/*
 let token
 beforeAll(async () => {
     if (mongoose.connection.readyState !== 1) {
@@ -55,4 +87,4 @@ it('should get all users', async () => {
 afterAll(async () => {
     server.close()
     await mongoose.connection.close();
-})
+})*/

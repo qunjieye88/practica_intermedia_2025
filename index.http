@@ -3,18 +3,18 @@ POST http://localhost:3000/api/user/register
 Content-Type: application/json
 
 {
-    "email": "correo3@example.com",
+    "email": "correo@example.com",
     "password": "12345678"
 }
 //Validar el correo a través de un código recibido en el mismo:
 //PUT /api/user/validation
 ###
 put http://localhost:3000/api/user/validation
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA2NzMzYjE4ZWFmZTA4YjVkYmM4YmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTI1MzE3OSwiZXhwIjoxNzQ1MzM5NTc5fQ.PKgPIB8jGyP63KtUjzhCtm0bjmPbWRzVfOm_zOyVtEE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTMzOTY1NSwiZXhwIjoxNzQ1NDI2MDU1fQ.kZQsCr_qekOvLzZ2UB8vBUPRZLjj57ScAsfFqqZDwCs
 Content-Type: application/json
 
 {
-    "code": "800169"
+    "code": "404156"
 }
 //Login en la aplicación (devuelve un token de sesión): POST /api/user/login
 ###
@@ -22,17 +22,17 @@ POST http://localhost:3000/api/user/login
 Content-Type: application/json
 
 {
-    "email": "correo2@example.com",
+    "email": "correo@example.com",
     "password": "12345678"
 }
 //Introducir datos personales del usuario: PATH o PUT /api/user
 ###
 put http://localhost:3000/api/user/register
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA2NzMzYjE4ZWFmZTA4YjVkYmM4YmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTI1MzE3OSwiZXhwIjoxNzQ1MzM5NTc5fQ.PKgPIB8jGyP63KtUjzhCtm0bjmPbWRzVfOm_zOyVtEE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTMzOTY1NSwiZXhwIjoxNzQ1NDI2MDU1fQ.kZQsCr_qekOvLzZ2UB8vBUPRZLjj57ScAsfFqqZDwCs
 Content-Type: application/json
 
 {
-    "email": "correo1@example.com",
+    "email": "correo@example.com",
     "name": "qunjieye",
     "nif": "40000000Q",
     "role":"admin"
@@ -40,7 +40,7 @@ Content-Type: application/json
 //Introducir datos de compañía: PATCH /api/user/company
 ###
 patch http://localhost:3000/api/user/company
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y2MjA5ZTg4MjU4MDA0NjQ3YTVmNzgiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDE4Njc4MCwiZXhwIjoxNzQ0MjczMTgwfQ.R9koSsJws10shetxHIkG8YGB6WCr-lppKwYgi-e8q1Y
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTMzOTY1NSwiZXhwIjoxNzQ1NDI2MDU1fQ.kZQsCr_qekOvLzZ2UB8vBUPRZLjj57ScAsfFqqZDwCs
 Content-Type: application/json
 
 {
@@ -55,11 +55,9 @@ Content-Type: application/json
   }
 }
 
-
-
 ###
 PATCH  http://localhost:3000/api/user/logo
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y2MjA5ZTg4MjU4MDA0NjQ3YTVmNzgiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDE4Njc4MCwiZXhwIjoxNzQ0MjczMTgwfQ.R9koSsJws10shetxHIkG8YGB6WCr-lppKwYgi-e8q1Y
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTMzOTY1NSwiZXhwIjoxNzQ1NDI2MDU1fQ.kZQsCr_qekOvLzZ2UB8vBUPRZLjj57ScAsfFqqZDwCs
 Content-Type: multipart/form-data; boundary=boundary123
 
 --boundary123
@@ -71,7 +69,7 @@ Content-Type: image/jpeg
 
 ###
 get http://localhost:3000/api/user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y2MzY2M2MwMTYxZjYzMzBhNDNhOGEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDE4OTAyNywiZXhwIjoxNzQ0Mjc1NDI3fQ.pK9wFSEpmmwTjE4mo2C9LcuoQlnMuLKYFNYdPLHTxmo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDUzOTIyOTcsImV4cCI6MTc0NTQ3ODY5N30.fUD3AinEftrP7F1A0abJX5jIjxactrBmfw8L1KipjWU
 Content-Type: application/json
 
 //Eliminar usuario física (hard delete) y lógicamente (soft delete)
@@ -119,14 +117,18 @@ Content-Type: application/json
 delete http://localhost:3000/api/user/deleteAllUsers
 Content-Type: application/json
 
+
+
+//CLIENTE
+//Crear un cliente: POST /api/client
 ###
 post http://localhost:3000/api/client
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA2NzMzYjE4ZWFmZTA4YjVkYmM4YmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTI1MzE3OSwiZXhwIjoxNzQ1MzM5NTc5fQ.PKgPIB8jGyP63KtUjzhCtm0bjmPbWRzVfOm_zOyVtEE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDUzOTIyOTcsImV4cCI6MTc0NTQ3ODY5N30.fUD3AinEftrP7F1A0abJX5jIjxactrBmfw8L1KipjWU
 Content-Type: application/json
 
 {
-  "name": "Juan",
-  "cif": "D52921210",
+  "name": "qunjieye",
+  "cif": "S52921222",
   "address": {
     "street": "Carlos V",
     "number": 22,
@@ -134,4 +136,67 @@ Content-Type: application/json
     "city": "Móstoles",
     "province": "Madrid"
     }
+}
+//actualizarlo PUT
+###
+put http://localhost:3000/api/client/6808942e994d56e0571caa66
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDUzOTIyOTcsImV4cCI6MTc0NTQ3ODY5N30.fUD3AinEftrP7F1A0abJX5jIjxactrBmfw8L1KipjWU
+Content-Type: application/json
+
+{
+  "name": "Juan",
+  "cif": "S52921232",
+  "address": {
+    "street": "Carlos V",
+    "number": 22,
+    "postal": 28936,
+    "city": "Móstoles",
+    "province": "Madrid"
+  }
+}
+//Si ya hay clientes, mostrarlos todos: GET /api/client
+###
+get http://localhost:3000/api/client
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDUzOTIyOTcsImV4cCI6MTc0NTQ3ODY5N30.fUD3AinEftrP7F1A0abJX5jIjxactrBmfw8L1KipjWU
+Content-Type: application/json
+
+//y uno en concreto: GET /api/client/{id}
+###
+get http://localhost:3000/api/client/6808942e994d56e0571caa66
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDUzOTIyOTcsImV4cCI6MTc0NTQ3ODY5N30.fUD3AinEftrP7F1A0abJX5jIjxactrBmfw8L1KipjWU
+Content-Type: application/json
+
+//Archivar (soft delete) y borrar un cliente (hard delete)
+###
+delete http://localhost:3000/api/client/6807c65db0eb0eb84f95b6cb?soft=true
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTMzOTY1NSwiZXhwIjoxNzQ1NDI2MDU1fQ.kZQsCr_qekOvLzZ2UB8vBUPRZLjj57ScAsfFqqZDwCs
+Content-Type: application/json
+
+//Lista los clientes archivados y recuperar uno en concreto (pasarlo a no borrado)
+###
+patch http://localhost:3000/api/client/6808942e994d56e0571caa66
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDUzOTIyOTcsImV4cCI6MTc0NTQ3ODY5N30.fUD3AinEftrP7F1A0abJX5jIjxactrBmfw8L1KipjWU
+Content-Type: application/json
+
+
+//Proyect
+//Crear un proyecto asociado a un usuario y cliente: POST /api/project
+###
+post http://localhost:3000/api/project
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDUzOTIyOTcsImV4cCI6MTc0NTQ3ODY5N30.fUD3AinEftrP7F1A0abJX5jIjxactrBmfw8L1KipjWU
+Content-Type: application/json
+
+{
+  "name": "Nombre del proyecto",
+  "projectCode": "Identificador de proyecto",
+  "email": "mimail@gmail.com",
+  "address": {
+    "street": "Carlos V",
+    "number": 22,
+    "postal": 28936,
+    "city": "Móstoles",
+    "province": "Madrid"
+  },
+  "code": "Código interno del proyecto",
+  "clientId": "6808942e994d56e0571caa66"
 }

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 const mongooseDelete = require("mongoose-delete")
 
-const ProjectsScheme = new mongoose.Schema(
+const ProyectsScheme = new mongoose.Schema(
     {   
         address: {
             street: String,
@@ -11,11 +11,12 @@ const ProjectsScheme = new mongoose.Schema(
             province: String
         },
         userId:String,
-        clientId: String,
+        clientId: mongoose.Schema.Types.ObjectId,
         name:String,
         proyectCode:String,
         code: String,
-        email:String
+        email:String,
+        projectCode:String
     },
     {
         timestamps: true, // TODO createdAt, updatedAt
@@ -23,5 +24,5 @@ const ProjectsScheme = new mongoose.Schema(
     }
 )
 
-UserScheme.plugin(mongooseDelete, {overrideMethods: "all"})
-module.exports = mongoose.model("projects", ProjectssScheme) 
+ProyectsScheme.plugin(mongooseDelete, {overrideMethods: "all"})
+module.exports = mongoose.model("projects", ProyectsScheme) 

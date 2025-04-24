@@ -30,9 +30,7 @@ const registerCtrl = async (req, res) => {//hecho
         }
     } catch (error) {
         res.status(404).send({ message: "Error Registro" });
-
     }
-
 }
 
 const validatorUser = async (req, res) => {

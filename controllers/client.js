@@ -4,13 +4,10 @@ const mongoose = require('mongoose');
 const createClient = async (req, res) => {//hecho
     try {
         const userId = req.user._id
-        const clientes = req.clientes
+        const client = req.client
         req = matchedData(req)
-        if (clientes) {
-            const clienteExistente = clientes.some(cliente => cliente.userId.equals(userId));
-            if (clienteExistente) {
-                return res.status(404).send({ message: "Ya Existe Cliente" });
-            }
+        if (client) {
+            return res.status(404).send({ message: "Ya Existe Cliente" });
         }
         const newUser = await ClientModel.create({
             ...req,
@@ -18,14 +15,13 @@ const createClient = async (req, res) => {//hecho
         });
         res.status(200).send(newUser);
     } catch (error) {
-        res.status(500).send({ message: "Error Crear" });
+        res.status(500).send({ message: error });
     }
 }
 
 const updateClient = async (req, res) => {//hecho
     try {
         const client = req.client
-        const userId = req.user._id
         req = matchedData(req)
         client.set(req);
         const updateClient = await client.save();

@@ -6,6 +6,7 @@ const dbConnect = require("./config/mongo");
 const routerUser = require("./routers/user");
 const routerClient = require("./routers/client")
 const routerProyect = require("./routers/projects")
+const routerDeliveryNote= require("./routers/deliveryNote")
 const swaggerUi = require("swagger-ui-express")
 const swaggerSpecs = require("./docs/swagger")
 
@@ -21,6 +22,7 @@ app.use(express.static("storage"));
 app.use("/api/user", routerUser);
 app.use("/api/client", routerClient);
 app.use("/api/project", routerProyect);
+app.use("/api/deliveryNote", routerDeliveryNote);
 // Conectar a la base de datos
 dbConnect();
 

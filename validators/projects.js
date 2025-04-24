@@ -16,17 +16,22 @@ const validatorRegisterProject = [
     }
 ]
 
-const validatorPutProyect = [
+const validatorUpdateProject = [
+    check("name").optional().notEmpty(),
+    check("projectCode").optional().notEmpty(),
     check("email").optional().notEmpty().isEmail(),
-    check("password").optional().notEmpty().isLength({ min: 8, max: 16 }),
-    check("proyectCode").optional().notEmpty(),
-    check("address").optional().notEmpty(),
     check("code").optional().notEmpty(),
-    check("clientId").optional().notEmpty(),
+    check("notes").optional().notEmpty(),
+    check("clientId").optional().notEmpty(),    
+    check("address.street").optional().notEmpty(),
+    check("address.number").optional().notEmpty(),
+    check("address.postal").optional().isPostalCode("ES"),
+    check("address.city").optional().notEmpty(),
+    check("address.province").optional().notEmpty(),
     (req, res, next) => {
         return validateResults(req, res, next)
     }
 ]
 
 
-module.exports = {validatorRegisterProject}
+module.exports = {validatorRegisterProject,validatorUpdateProject}

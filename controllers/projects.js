@@ -1,5 +1,6 @@
 const { matchedData } = require("express-validator");
 const ProjectModel = require("../models/projects");
+const ClientModel = require("../models/client");
 const mongoose = require('mongoose');
 const createProject = async (req, res) => {//hecho
     try {
@@ -7,7 +8,6 @@ const createProject = async (req, res) => {//hecho
         const clientes = req.clientes
         const project = req.project
         req = matchedData(req)
-        
         if(project){
             return res.status(404).send({ message: "Proyecto Creado" });
         }
@@ -25,49 +25,63 @@ const createProject = async (req, res) => {//hecho
     }
 }
 
-const updateClient = async (req, res) => {//hecho
+const updateProyect = async (req, res) => {//hecho
     try {
-        const client = req.client
-        const userId = req.user._id
+        const project = req.project
+        const projectId = req.params.id;
         req = matchedData(req)
-        client.set(req);
-        const updateClient = await client.save();
-        res.status(200).send(updateClient);
+        const clientId = req.clientId
+        if(clientId){
+            const client = await ClientModel.findById(clientId);
+            if(!client){
+                return res.status(500).send({ message: "Cliente Id No Existe" });
+            }
+        }
+        const projectCode = req.projectCode
+        if(projectCode){
+            const proyectoExistente = await ProjectModel.findOne({projectCode});
+            if(proyectoExistente && !proyectoExistente._id.equals(projectId)){
+                return res.status(500).send({ message: "El Codigo del Proyecto Ya Existe" });
+            }
+        }
+        project.set(req);
+        const updateProject = await project.save();
+        res.status(200).send(updateProject);
     } catch (error) {
         res.status(500).send({ message: "Error Actualizar" });
     }
 }
 
-const getClients = async (req, res) => {
+const getProjects= async (req, res) => {
     try {
-        const clients = req.clients
-        res.status(200).send(clients);
+        const projects = req.projects
+        res.status(200).send(projects);
     } catch (error) {
         res.status(500).send({ message: "Error Obtener Cliente" });
     }
 }
 
-const getClient = async (req, res) => {
+const getProject = async (req, res) => {
     try {
-        const client = req.client
-        res.status(200).send(client);
+        const project = req.project
+        res.status(200).send(project);
     } catch (error) {
         res.status(500).send({ message: "Error Obtener Clientes" });
     }
 }
 
-const deleteClient = async (req, res) => {
+const deleteProject = async (req, res) => {
     try {
-        const client = req.client;
+        const project = req.project;
         if (req.query.soft === "true") {
-            await client.delete();
-            res.status(200).json({ client, message: 'Cliente eliminado (soft delete)' });
+            await project.delete();
+            res.status(200).json({ project, message: 'Cliente eliminado (soft delete)' });
         } else {
-            const deletedClient = await ProjectModel.findByIdAndDelete(client._id); // Hard delete
-            if (!deletedClient) {
+            const deletedProject = await ProjectModel.findByIdAndDelete(project._id); // Hard delete
+            if (!deletedProject) {
                 res.status(404).json({ message: 'Cliente no encontrado' });
             } else {
-                res.status(200).json({ client: deletedClient, message: 'Cliente eliminado permanentemente (hard delete)' });
+                res.status(200).json({ project: deletedProject, message: 'Cliente eliminado permanentemente (hard delete)' });
             }
         }
     } catch (err) {
@@ -75,10 +89,10 @@ const deleteClient = async (req, res) => {
     }
 };
 
-const restoreClient = async (req, res) => {
+const restoreProject = async (req, res) => {
     try {
-        const clientId = req.params.id;
-        const restored = await ProjectModel.restore({ _id: clientId });
+        const projectId = req.params.id;
+        const restored = await ProjectModel.restore({ _id: projectId });
 
         if (!restored) {
             return res.status(404).json({ message: "Cliente no encontrado o ya activo" });
@@ -92,6 +106,6 @@ const restoreClient = async (req, res) => {
 
 
 module.exports = {
-    createProject, updateClient, getClients,
-    getClient, deleteClient, restoreClient
+    createProject, updateProyect,getProjects,
+    getProject,deleteProject,restoreProject
 }

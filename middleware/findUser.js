@@ -24,9 +24,12 @@ const findUserEmail = async (req, res, next) => {
             }
         }
     } catch (error) {
-        console.log(data)
         return res.status(500).json({ message: 'Error al buscar usuario por email' });
     }
 };
+
+const findUserId = async (req, res, next) =>{
+
+}
 
 module.exports = { findUserEmail }

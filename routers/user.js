@@ -14,7 +14,7 @@ const { uploadMiddlewareMemory } = require("../utils/handleStorage.js")
 
 const { checkRol, checkRolNot } = require("../middleware/rol.js")
 const { authMiddleware } = require("../middleware/session.js")
-const { findUserEmail } = require("../middleware/findUserEmail.js")
+const { findUserEmail } = require("../middleware/findUser.js")
 
 const routerUser = express.Router();
 

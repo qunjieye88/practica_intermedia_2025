@@ -13,10 +13,14 @@ const ProyectsScheme = new mongoose.Schema(
         userId:String,
         clientId: mongoose.Schema.Types.ObjectId,
         name:String,
-        proyectCode:String,
         code: String,
         email:String,
-        projectCode:String
+        projectCode:{
+            type: String,
+            unique: true,
+            index: true
+        },
+        notes:String
     },
     {
         timestamps: true, // TODO createdAt, updatedAt
@@ -25,4 +29,4 @@ const ProyectsScheme = new mongoose.Schema(
 )
 
 ProyectsScheme.plugin(mongooseDelete, {overrideMethods: "all"})
-module.exports = mongoose.model("projects", ProyectsScheme) 
+module.exports = mongoose.model("Project", ProyectsScheme) 

@@ -26,7 +26,7 @@ const validatorUpdate = [
     check("company").optional().notEmpty().isString(),
     check("name").optional().notEmpty().isString(),
     check("surnames").optional().notEmpty().isString(),
-    check("nif").optional().notEmpty().matches(/^[0-9]{8}[A-Z]$/),
+    check("cif").optional().notEmpty().matches(/^[0-9]{8}[A-Z]$/),
     check("role").optional().notEmpty().isIn(["admin", "user"]),
     (req, res, next) => {
         return validateResults(req, res, next)

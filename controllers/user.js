@@ -1,6 +1,6 @@
 const UserModel = require("../models/user.js");
 const { matchedData } = require("express-validator")
-const { encrypt, compare ,hola} = require("../utils/handlePassword")
+const { encrypt, compare, hola } = require("../utils/handlePassword")
 const { tokenSign, verifyToken } = require("../utils/handleJwt.js")
 const { uploadToPinata } = require("../utils/handleUploadIPFS.js");
 
@@ -53,29 +53,39 @@ const validatorUser = async (req, res) => {
         }
     } catch (error) {
         res.status(404).send({ message: "Error Validacion" });
-
     }
 }
 
 const loginUser = async (req, res) => {
     try {
         const user = req.user
-        const data = {
-            token: await tokenSign({ _id: user._id, role: user.role }),
-            user: {
-                email: user.email,
-                role: user.role,
-                _id: user._id,
-                name: user.name
+        req = matchedData(req);
+        if (!user) {
+            return res.status(404).json({ message: 'Correo Incorrecto' });
+        } else if (user.status == 0) {
+            return res.status(400).json({ message: "User is not validated." });
+        } else {
+            const verification = await compare(req.password, user.password)
+            if (verification) {
+                const data = {
+                    token: await tokenSign({ _id: user._id, role: user.role }),
+                    user: {
+                        email: user.email,
+                        role: user.role,
+                        _id: user._id,
+                        name: user.name
+                    }
+                };
+
+                res.status(201).send(data);
+            } else {
+                return res.status(400).json({ message: "Contraseña incorrecta" });
             }
-        };
-        res.status(201).send(data);
+        }
     } catch (error) {
         res.status(404).send({ message: "Error login" });
     }
 }
-
-
 
 const updateUser = async (req, res) => {
     try {
@@ -93,7 +103,6 @@ const updateUser = async (req, res) => {
     }
 }
 
-
 const patchCompany = async (req, res) => {
     try {
         const user = req.user
@@ -102,7 +111,7 @@ const patchCompany = async (req, res) => {
             if (user.name && user.nif) {
                 req.company = { ...req.company, name: user.name, cif: user.nif }
             } else {
-                res.status(400).json({ message: 'Usuario sin nombre/cif' });
+                return res.status(400).json({ message: 'Usuario sin nombre/cif' });
             }
         }
         user.set(req);
@@ -115,9 +124,7 @@ const patchCompany = async (req, res) => {
     } catch (error) {
         res.status(404).send({ message: "Error actualizar compania" });
     }
-
 }
-
 
 const patchLogo = async (req, res) => {
     try {
@@ -139,7 +146,6 @@ const patchLogo = async (req, res) => {
     }
 }
 
-
 const getUser = async (req, res) => {
     try {
         const user = req.user
@@ -152,6 +158,7 @@ const getUser = async (req, res) => {
         res.status(404).send({ message: "Error Usuario" });
     }
 }
+
 const deleteUser = async (req, res) => {
     try {
         const user = req.user;
@@ -190,11 +197,9 @@ const getCodePassword = async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: 'Error Codigo' });
     }
-
 }
 
 const getPassword = async (req, res) => {
-
     req = matchedData(req);
     const user = await UserModel.findOne({ email: req.email });
     if (!user) {
@@ -208,8 +213,8 @@ const getPassword = async (req, res) => {
             res.status(400).json({ message: "Codigo incorrecto" });
         }
     }
-
 }
+
 const createInvitation = async (req, res) => {
     req = matchedData(req);
     const existingUser = await UserModel.findOne({ email: req.email });
@@ -237,8 +242,6 @@ const createInvitation = async (req, res) => {
         } else {
             res.status(404).send({ menssage: "Compania no existe" });
         }
-
-
     }
 }
 
@@ -247,14 +250,16 @@ const getUsers = async (req, res) => {
     //const existingUser = await UserModel.deleteMany({})
     res.status(200).send(existingUser);
 }
+
 const deleteAllUsers = async (req, res) => {
     const existingUser = await UserModel.deleteMany({})
     res.status(200).send(existingUser);
 }
+
 module.exports = {
     registerCtrl, validatorUser, loginUser,
     updateUser, patchLogo,
     getUser, deleteUser, getCodePassword,
     getPassword, patchCompany, createInvitation,
-    getUsers,deleteAllUsers
+    getUsers, deleteAllUsers
 }

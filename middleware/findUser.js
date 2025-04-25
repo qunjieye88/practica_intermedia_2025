@@ -9,20 +9,8 @@ const findUserEmail = async (req, res, next) => {
     try {
         const email = data.email;
         const user = await usersModel.findOne({ email });
-        if (!user) {
-            return res.status(404).json({ message: 'Correo Incorrecto' });
-        } else if (user.status == 0) {
-            return res.status(400).json({ message: "User is not validated." });
-        } else {
-            const verification = await compare(data.password, user.password)
-            console.log(verification)
-            if (verification) {
-                req.user = user;
-                next();
-            } else {
-                return res.status(400).json({ message: "Contraseña incorrecta" });
-            }
-        }
+        req.user = user;
+        next();
     } catch (error) {
         return res.status(500).json({ message: 'Error al buscar usuario por email' });
     }

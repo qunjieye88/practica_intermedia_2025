@@ -22,8 +22,8 @@ beforeAll(async () => {
         .expect(200)
         .expect('Content-Type', /application\/json/)
 
-    users = [//0
-        {
+    users = [
+        {//0
             email: "0@correo.es",
             password: await encrypt("12345678"),
             emailCode: 999999,
@@ -74,6 +74,61 @@ beforeAll(async () => {
         },//7
         {
             email: "7@correo.es",
+            password: await encrypt("12345678"),
+            emailCode: 999999,
+            status: 1,
+            role: "user"
+        },//8
+        {
+            email: "8@correo.es",
+            password: await encrypt("12345678"),
+            emailCode: 999999,
+            status: 1,
+            role: "user"
+        },//9
+        {
+            email: "9@correo.es",
+            password: await encrypt("12345678"),
+            emailCode: 999999,
+            status: 1,
+            role: "user"
+        },//10
+        {
+            email: "10@correo.es",
+            password: await encrypt("12345678"),
+            emailCode: 999999,
+            status: 1,
+            role: "user"
+        },//11
+        {
+            name: "qunjieye",
+            nif: "40000000Q",
+            email: "11@correo.es",
+            password: await encrypt("12345678"),
+            emailCode: 999999,
+            status: 1,
+            role: "user"
+        },//12
+        {
+            email: "12@correo.es",
+            password: await encrypt("12345678"),
+            emailCode: 999999,
+            status: 1,
+            role: "user"
+        },//13
+        {
+            name: "qunjieye",
+            nif: "40000000Q",
+            email: "13@correo.es",
+            password: await encrypt("12345678"),
+            emailCode: 999999,
+            status: 1,
+            role: "user"
+        },//14
+        {
+            name: "qunjieye",
+            nif: "40000000Q",
+            email: "14@correo.es",
             password: await encrypt("12345678"),
             emailCode: 999999,
             status: 1,
@@ -199,8 +254,158 @@ it('post http://localhost:3000/api/user/login sin errores', async () => {
     expect(response.body).toHaveProperty('user');
 });
 
+//8
+it('post http://localhost:3000/api/user/register correo ya existente', async () => {
 
+    const user = await UserModel.findOne(users[8])
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .put('/api/user/register')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            email: users[7].email,
+            name: "qunjieye",
+            nif: "40000000Q",
+            role: "admin"
+        })
+        .expect(404)
+        .expect('Content-Type', /application\/json/)
+    expect(response.body).toHaveProperty('message');
+});
+//8
+it('post http://localhost:3000/api/user/register correo ya existente', async () => {
 
+    const user = await UserModel.findOne(users[8])
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .put('/api/user/register')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            email: users[7].email,
+            name: "qunjieye",
+            nif: "40000000Q",
+            role: "admin"
+        })
+        .expect(404)
+        .expect('Content-Type', /application\/json/)
+    expect(response.body).toHaveProperty('message');
+});
+//9
+it('post http://localhost:3000/api/user/register update usuario sin token', async () => {
+
+    const user = await UserModel.findOne(users[9])
+    const response = await api
+        .put('/api/user/register')
+        .send({
+            name: "qunjieye",
+            nif: "40000000Q",
+            role: "admin"
+        })
+        .expect(401)
+        .expect('Content-Type', /text\/html/)
+    expect(response.text).toBe('NO TOKEN');
+});
+//10
+it('post http://localhost:3000/api/user/register update usuario sin errores', async () => {
+
+    const user = await UserModel.findOne(users[10])
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .put('/api/user/register')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            name: "qunjieye",
+            nif: "40000000Q",
+            role: "admin"
+        })
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+});
+//11
+it('patch http://localhost:3000/api/user/company añadir compania sin errores sin nombre ni cif', async () => {
+
+    const user = await UserModel.findOne(users[11])
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .patch('/api/user/company')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            company: {
+                street: "Carlos 67",
+                number: 22,
+                postal: 28936,
+                city: "Móstoles",
+                province: "Madrid"
+            }
+        })
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+    expect(response.body).toHaveProperty('company');
+});
+//12
+it('patch http://localhost:3000/api/user/company añadir compania con error, sin nombre de usuario ni nombre de compania', async () => {
+
+    const user = await UserModel.findOne(users[12])
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .patch('/api/user/company')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            company: {
+                street: "Carlos 67",
+                number: 22,
+                postal: 28936,
+                city: "Móstoles",
+                province: "Madrid"
+            }
+        })
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+    expect(response.body).toHaveProperty('message');
+});
+
+//13
+it('patch http://localhost:3000/api/user/company añadir compania con error, sin token', async () => {
+
+    const user = await UserModel.findOne(users[13])
+    const response = await api
+        .patch('/api/user/company')
+        .send({
+            company: {
+                street: "Carlos 67",
+                number: 22,
+                postal: 28936,
+                city: "Móstoles",
+                province: "Madrid"
+            }
+        })
+        .expect(401)
+        .expect('Content-Type', /text\/html/)
+    expect(response.text).toBe('NO TOKEN');
+});
+//14
+it('patch http://localhost:3000/api/user/company añadir compania sin errores', async () => {
+
+    const user = await UserModel.findOne(users[14])
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .patch('/api/user/company')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            company: {
+                street: "Carlos 67",
+                number: 22,
+                postal: 28936,
+                city: "Móstoles",
+                province: "Madrid",
+                name: "qunjieyse",
+                cif: "40000010Q"
+            }
+        })
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+    expect(response.body).toHaveProperty('company');
+});
 
 /*
 it('should validate a user', async () => {

@@ -1,34 +1,40 @@
 //Crear una cuenta de usuario: POST /api/user/register
+//testeado
 POST http://localhost:3000/api/user/register
 Content-Type: application/json
 
 {
-    "email": "prueba3@example.com",
+    "email": "1@example.com",
     "password": "12345678"
 }
-//Validar el correo a través de un código recibido en el mismo:
-//PUT /api/user/validation
+
+
 ###
+//Validar el correo a través de un código recibido en el mismo: PUT /api/user/validation
+//testeado
 put http://localhost:3000/api/user/validation
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODBhNzBjMmQ5NWYwODg4NDQ0YzMzNGIiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTUxNDY5MSwiZXhwIjoxNzQ1NjAxMDkxfQ.ueyBUnRGVlV2AvTwoMnZhgvdrb4lX3sruA_CVhlg8UI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODBiNTQ4M2NiOGM4YzFjOWM1ZDc3MTAiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTU3Mjk5NiwiZXhwIjoxNzQ1NjU5Mzk2fQ.EvIaoWxEPOy8-Iv9b1i7qGlyPynt6pPS_-e8DANb924
 Content-Type: application/json
 
 {
-    "code": "159782"
+    "code": "202265"
 }
-//Login en la aplicación (devuelve un token de sesión): POST /api/user/login
+
 ###
+//Login en la aplicación (devuelve un token de sesión): POST /api/user/login
+//testeado
 POST http://localhost:3000/api/user/login
 Content-Type: application/json
 
 {
-    "email": "prueba@example.com",
+    "email": "1@example.com",
     "password": "12345678"
 }
-//Introducir datos personales del usuario: PATH o PUT /api/user
 ###
+//Introducir datos personales del usuario: PATH o PUT /api/user
+//testeado
 put http://localhost:3000/api/user/register
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODBhMTMyMzMyODZmNTlhYWZjM2VjY2YiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTQ5MDcyMywiZXhwIjoxNzQ1NTc3MTIzfQ.n-oroGY4AcVgpzzmQE9vnu-4Q0pxfqAP_f1bxlE-pAg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODBiNTQ4M2NiOGM4YzFjOWM1ZDc3MTAiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTU3Mzc4OCwiZXhwIjoxNzQ1NjYwMTg4fQ.J2WbbX9RboJNs0tRB5XnsVAoXUmtxVpsCQlBgMPXxK8
 Content-Type: application/json
 
 {
@@ -39,7 +45,7 @@ Content-Type: application/json
 //Introducir datos de compañía: PATCH /api/user/company
 ###
 patch http://localhost:3000/api/user/company
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODBhMTMyMzMyODZmNTlhYWZjM2VjY2YiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTQ5MDcyMywiZXhwIjoxNzQ1NTc3MTIzfQ.n-oroGY4AcVgpzzmQE9vnu-4Q0pxfqAP_f1bxlE-pAg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODBiNTQ4M2NiOGM4YzFjOWM1ZDc3MTAiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTU3Mzc4OCwiZXhwIjoxNzQ1NjYwMTg4fQ.J2WbbX9RboJNs0tRB5XnsVAoXUmtxVpsCQlBgMPXxK8
 Content-Type: application/json
 
 {
@@ -48,9 +54,7 @@ Content-Type: application/json
     "number": 22,
     "postal": 28936,
     "city": "Móstoles",
-    "province": "Madrid",
-    "name": "qunjieyse",
-    "cif": "40000000Q"
+    "province": "Madrid"
   }
 }
 

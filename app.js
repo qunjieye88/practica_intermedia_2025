@@ -11,7 +11,9 @@ const swaggerUi = require("swagger-ui-express")
 const swaggerSpecs = require("./docs/swagger")
 
 const app = express();
-const port = process.env.PORT || 3000;
+
+const port = process.env.NODE_ENV === "test" ? 3001 : process.env.PORT;
+//const port = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());

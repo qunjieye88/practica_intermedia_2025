@@ -5,16 +5,25 @@ const { matchedData } = require("express-validator")
 const { encrypt, compare } = require("../utils/handlePassword")
 
 
-const ClientUserStatus = async (req, res, next) => {
+const ClientUserStatus = (status) =>  async (req, res, next) => {
     try {
         const userId = req.user._id;
         const client = req.client
-        console.log(userId)
-        console.log(client)
-        if(!userId.equals(client.userId)){
-            return res.status(400).json({ message: "Cliente No Pertenece a Usuario" });
+        if(client){
+            if(userId.equals(client.userId) === status){
+                next()
+            }else if(status === false){
+                res.status(400).json({ message: "El Cliente Pertenece Al Usuario" });
+            }else{
+                res.status(400).json({ message: "El Cliente Not Pertenece Al Usuario" });
+            }
+        }else{
+            if(status === false){
+                next()
+            }else{
+                res.status(400).json({ message: "El Cliente No Existe" });
+            }
         }
-        next();
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

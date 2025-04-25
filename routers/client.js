@@ -15,11 +15,11 @@ const routerClient = express.Router();
 routerClient.use(express.json())
 
 
-routerClient.post('/',createValidator,authMiddleware,checkRol("admin"),findClientCifUserId,createClient)
-routerClient.put('/:id',updateClientValidator,authMiddleware,checkRol("admin"),findClientIdParams,ClientUserStatus,updateClient)
+routerClient.post('/',createValidator,authMiddleware,checkRol("admin"),findClientCifUserId,ClientUserStatus(false),createClient)
+routerClient.put('/:id',updateClientValidator,authMiddleware,checkRol("admin"),findClientIdParams,ClientUserStatus(true),updateClient)
 routerClient.get('/',authMiddleware,checkRol("admin"),findClientsUserId,getClients)
-routerClient.get('/:id',authMiddleware,checkRol("admin"),findClientIdParams,ClientUserStatus,getClient)
-routerClient.delete('/:id',authMiddleware,checkRol("admin"),findClientIdParams,ClientUserStatus, deleteClient);
+routerClient.get('/:id',authMiddleware,checkRol("admin"),findClientIdParams,ClientUserStatus(true),getClient)
+routerClient.delete('/:id',authMiddleware,checkRol("admin"),findClientIdParams,ClientUserStatus(true), deleteClient);
 routerClient.patch('/:id',authMiddleware,checkRol("admin"), restoreClient);
 
 module.exports = routerClient;

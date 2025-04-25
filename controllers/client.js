@@ -4,11 +4,7 @@ const mongoose = require('mongoose');
 const createClient = async (req, res) => {//hecho
     try {
         const userId = req.user._id
-        const client = req.client
         req = matchedData(req)
-        if (client) {
-            return res.status(404).send({ message: "Ya Existe Cliente" });
-        }
         const newUser = await ClientModel.create({
             ...req,
             userId: new mongoose.Types.ObjectId(userId)
@@ -72,11 +68,10 @@ const restoreClient = async (req, res) => {
     try {
         const clientId = req.params.id;
         const restored = await ClientModel.restore({ _id: clientId });
-
-        if (!restored) {
+        const client = await ClientModel.findById(clientId);
+        if (!client) {
             return res.status(404).json({ message: "Cliente no encontrado o ya activo" });
         }
-
         res.status(200).json({ message: "Cliente restaurado correctamente" });
     } catch (error) {
         res.status(500).json({ message: "Error al restaurar el cliente", error });

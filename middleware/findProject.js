@@ -36,9 +36,6 @@ const findProyectId = async (req, res, next) => {
         const data = matchedData(req)
         const projectId = data.projectId;
         const project = await ProjectModel.findById(projectId);
-        if (!project) {
-            return res.status(404).json({ message: 'Proyecto no encontrado' });
-        }
         req.project = project
         next();
     } catch (error) {
@@ -90,7 +87,33 @@ const ProjectUserStatus = (status)=> async (req, res, next) => {
     }
 }
 
+const projectClientStatus = (status)=> async (req, res, next) => {
+
+    try {
+        const clientId = req.client._id;
+        const project = req.project
+
+        if (project) {
+            if (clientId.equals(project.clientId) === status) {
+                next()
+            } else if (status === false) {
+                res.status(400).json({ message: "El Proyecto Pertenece Al Clinte" });
+            } else {
+                res.status(400).json({ message: "El Proyecto No Pertenece Al Clinte" });
+            }
+        } else {
+            if (status === false) {
+                next()
+            } else {
+                res.status(400).json({ message: "El Proyecto No Existe/No pertenece al Clinte" });
+            }
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
 
 
 
-module.exports = { findProjectProjectCode,ProjectUserStatus, findProyectId, findProyectIdParams, findProjectsId }
+
+module.exports = { findProjectProjectCode,ProjectUserStatus, findProyectId, findProyectIdParams, findProjectsId ,projectClientStatus}

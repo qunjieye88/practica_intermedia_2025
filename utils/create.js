@@ -1,6 +1,7 @@
 const UserModel = require("../models/user.js");
 const ClientModel = require("../models/client.js");
 const ProjectModel = require("../models/projects.js");
+const DeliveryNoteModel = require("../models/deliveryNote.js");
 const { encrypt} = require("../utils/handlePassword")
 
 
@@ -71,4 +72,24 @@ const createProject = async (num, _id, userId, clientId) => {
     return project;
 }
 
-module.exports = {createUser,createProject,createClient}
+const createDeliveryNote = async (_id, userId, clientId,projectId) => {
+    const data = {
+        clientId: clientId,
+        projectId: projectId,
+        userId: userId,
+        items: [{
+            "type": "hour",
+            "hours": 1,
+            "description":"hola"
+        }]
+    };
+
+    if (_id) {
+        data._id = _id;
+    }
+
+    const deliveryNote = await DeliveryNoteModel.create(data);
+    return deliveryNote;
+}
+
+module.exports = {createUser,createProject,createClient,createDeliveryNote}

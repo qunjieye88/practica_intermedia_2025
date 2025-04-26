@@ -10,17 +10,13 @@ const ClientUserStatus = (status) =>  async (req, res, next) => {
         const userId = req.user._id;
         const client = req.client
 
-        
-
-        //console.log(req.user)
-        //console.log(client)
         if(client){
             if(userId.equals(client.userId) === status){
                 next()
             }else if(status === false){
                 res.status(400).json({ message: "El Cliente Pertenece Al Usuario" });
             }else{
-                res.status(400).json({ message: "El Cliente Not Pertenece Al Usuario" });
+                res.status(400).json({ message: "El Cliente No Pertenece Al Usuario" });
             }
         }else{
             if(status === false){

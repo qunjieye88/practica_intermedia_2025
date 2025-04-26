@@ -81,7 +81,7 @@ const deleteProject = async (req, res) => {
         } else {
             const deletedProject = await ProjectModel.findByIdAndDelete(project._id); // Hard delete
             if (!deletedProject) {
-                res.status(404).json({ message: 'Cliente no encontrado' });
+                res.status(404).json({ message: 'Proyecto no encontrado' });
             } else {
                 res.status(200).json({ project: deletedProject, message: 'Cliente eliminado permanentemente (hard delete)' });
             }
@@ -95,7 +95,6 @@ const restoreProject = async (req, res) => {
     try {
         const projectId = req.params.id;
         const restored = await ProjectModel.restore({ _id: projectId });
-
         if (!restored) {
             return res.status(404).json({ message: "Cliente no encontrado o ya activo" });
         }

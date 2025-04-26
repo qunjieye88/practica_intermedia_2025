@@ -542,6 +542,52 @@ afterAll(async () => {
     await mongoose.connection.close();
 })
 
+//patch http://localhost:3000/api/project/680cf151c0cb272b1721ac7b
+
+
+it('patch http://localhost:3000/api/project/680cf151c0cb272b1721ac7b error: no hay token', async () => {
+    const num = 27
+    const user = await createUser(num, null);
+    const client = await createClient(num, null, user._id);
+    const project = await createProject(num, null, user._id, client._id);
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .patch(`/api/project/${project._id}`)
+        .expect(401)
+        .expect('Content-Type', /text\/html/)
+    expect(response.text).toBe('NO TOKEN');
+});
+
+
+it('patch http://localhost:3000/api/project/680cf151c0cb272b1721ac7b error: error autentificacion', async () => {
+    const num = 28
+    const user = await createUser(num, null);
+    const client = await createClient(num, null, user._id);
+    const project = await createProject(num, null, user._id, client._id);
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .patch(`/api/project/${project._id}`)
+        .set('Authorization', `Bearer ${token}s`)
+        .expect(403)
+        .expect('Content-Type', /text\/html/)
+    expect(response.text).toBe('Error de autenticacion');
+});
+
+
+it('patch http://localhost:3000/api/project/680cf151c0cb272b1721ac7b sin errores', async () => {
+    const num = 29
+    const user = await createUser(num, null);
+    const client = await createClient(num, null, user._id);
+    const project = await createProject(num, null, user._id, client._id);
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    await project.delete();
+    const response = await api
+        .patch(`/api/project/${project._id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+        expect(response.body.message).toBe("Cliente restaurado correctamente");
+});
 
 /*
 

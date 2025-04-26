@@ -236,19 +236,19 @@ Content-Type: application/json
 
 //o un proyecto específico: GET
 ###
-get http://localhost:3000/api/project/6809169a80c0972a28f8592a
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDUzOTIyOTcsImV4cCI6MTc0NTQ3ODY5N30.fUD3AinEftrP7F1A0abJX5jIjxactrBmfw8L1KipjWU
+get http://localhost:3000/api/project/680cf34bfa5e3748fe40b351
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDU2Nzc1NTMsImV4cCI6MTc0NTc2Mzk1M30.NtUzxDFNk2fDy556Svix6ou0svz5qYzF83WdlYs21nM
 Content-Type: application/json
 
 //Archivar (soft delete) y borrar un proyecto (hard delete)
 ###
-delete http://localhost:3000/api/project/6809169a80c0972a28f8592a?soft=false
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDUzOTIyOTcsImV4cCI6MTc0NTQ3ODY5N30.fUD3AinEftrP7F1A0abJX5jIjxactrBmfw8L1KipjWU
+delete http://localhost:3000/api/project/680cf34bfa5e3748fe40b351?soft=false
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDU2Nzc1NTMsImV4cCI6MTc0NTc2Mzk1M30.NtUzxDFNk2fDy556Svix6ou0svz5qYzF83WdlYs21nM
 Content-Type: application/json
+
 
 //Lista los proyectos archivados y recuperar uno en concreto (pasarlo a no borrado)
 ###
-patch http://localhost:3000/api/project/680920ed91f71b1a79446eeb
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDUzOTIyOTcsImV4cCI6MTc0NTQ3ODY5N30.fUD3AinEftrP7F1A0abJX5jIjxactrBmfw8L1KipjWU
+patch http://localhost:3000/api/project/680cf34bfa5e3748fe40b351
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDU2Nzc1NTMsImV4cCI6MTc0NTc2Mzk1M30.NtUzxDFNk2fDy556Svix6ou0svz5qYzF83WdlYs21nM
 Content-Type: application/json
-

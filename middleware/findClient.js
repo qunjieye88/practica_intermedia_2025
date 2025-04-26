@@ -102,7 +102,6 @@ const findClientsUserId = async (req, res, next) => {
     try {
         const id = req.user._id
         const clients = await ClientModel.find({ userId: id });
-        console.log(clients)
         req.clients = clients
         next();
     } catch (error) {

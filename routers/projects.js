@@ -7,17 +7,17 @@ const {validatorRegisterProject,validatorUpdateProject} = require("../validators
 
 const { checkRol } = require("../middleware/rol.js")
 const { authMiddleware } = require("../middleware/session.js")
-const { findClientCif,findClientId,findClientsUserId } = require("../middleware/findClient.js")
-const { findProjectProjectCode,findProyectIdParams,findProjectsId } = require("../middleware/findProject.js")
+const { findClientCif,findClientId,findClientsUserId,findClientIdUserId,ClientUserStatus } = require("../middleware/findClient.js")
+const { findProjectProjectCode,findProyectIdParams,findProjectsId,ProjectUserStatus} = require("../middleware/findProject.js")
 
 const routerProject = express.Router();
 
 routerProject.use(express.json())
-routerProject.post('/',validatorRegisterProject,authMiddleware,checkRol("admin"),findProjectProjectCode,findClientsUserId,createProject)
-routerProject.put('/:id',validatorUpdateProject,authMiddleware,checkRol("admin"),findProyectIdParams,updateProyect)
+routerProject.post('/',validatorRegisterProject,authMiddleware,checkRol("admin"),findProjectProjectCode,findClientIdUserId,createProject)
+routerProject.put('/:id',validatorUpdateProject,authMiddleware,checkRol("admin"),findProyectIdParams,ProjectUserStatus(true),updateProyect)
 routerProject.get('/',authMiddleware,checkRol("admin"),findClientsUserId,findProjectsId,getProjects)
-routerProject.get('/:id',authMiddleware,checkRol("admin"),findProyectIdParams,getProject)
-routerProject.delete('/:id',authMiddleware,checkRol("admin"),findProyectIdParams, deleteProject);
+routerProject.get('/:id',authMiddleware,checkRol("admin"),findProyectIdParams,ProjectUserStatus(true),getProject)
+routerProject.delete('/:id',authMiddleware,checkRol("admin"),findProyectIdParams,ProjectUserStatus(true), deleteProject);
 routerProject.patch('/:id',authMiddleware,checkRol("admin"), restoreProject);
 
 module.exports = routerProject;

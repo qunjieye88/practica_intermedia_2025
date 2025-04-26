@@ -9,6 +9,11 @@ const ClientUserStatus = (status) =>  async (req, res, next) => {
     try {
         const userId = req.user._id;
         const client = req.client
+
+        
+
+        //console.log(req.user)
+        //console.log(client)
         if(client){
             if(userId.equals(client.userId) === status){
                 next()
@@ -71,11 +76,19 @@ const findClientId = async (req, res, next) => {
     try {
         const data = matchedData(req)
         const clientId = data.clientId;
-        const userId = req.user._id
-        const client = await ClientModel.findOne({ _id: clientId, userId: userId });
-        if (!client) {
-            return res.status(404).json({ message: 'Cliente no encontrado' });
-        }
+        const client = await ClientModel.findById(clientId);
+        req.client = client
+        next();
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+const findClientIdUserId = async (req, res, next) => {
+    try {
+        const userId = req.user._id;
+        const data = matchedData(req)
+        const clientId = data.clientId;
+        const client = await ClientModel.findOne({userId: userId,_id:clientId });
         req.client = client
         next();
     } catch (error) {
@@ -83,10 +96,13 @@ const findClientId = async (req, res, next) => {
     }
 };
 
+
+
 const findClientsUserId = async (req, res, next) => {
     try {
         const id = req.user._id
         const clients = await ClientModel.find({ userId: id });
+        console.log(clients)
         req.clients = clients
         next();
     } catch (error) {
@@ -94,4 +110,4 @@ const findClientsUserId = async (req, res, next) => {
     }
 };
 
-module.exports = { findClientCif,ClientUserStatus, findClientId, findClientCifUserId, findClientIdParams, findClientsUserId }
+module.exports = { findClientCif,ClientUserStatus, findClientId,findClientIdUserId, findClientCifUserId, findClientIdParams, findClientsUserId }

@@ -18,6 +18,7 @@ beforeAll(async () => {
         .expect(200)
         .expect('Content-Type', /application\/json/)
     await ClientModel.deleteMany({})
+    await UserModel.deleteMany({})
 
     usersId = [
         new ObjectId(),//0
@@ -653,3 +654,8 @@ it('patch http://localhost:3000/api/client/:id recuperar cliente sin errores', a
         .expect('Content-Type', /application\/json/)
     expect(response.body.message).toBe("Cliente restaurado correctamente");
 });
+
+afterAll(async()=> {
+    server.close()
+    await mongoose.connection.close();
+})

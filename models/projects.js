@@ -10,7 +10,7 @@ const ProyectsScheme = new mongoose.Schema(
             city: String,
             province: String
         },
-        userId:String,
+        userId:mongoose.Schema.Types.ObjectId,
         clientId: mongoose.Schema.Types.ObjectId,
         name:String,
         code: String,

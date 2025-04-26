@@ -14,7 +14,6 @@ const routerClient = express.Router();
 
 routerClient.use(express.json())
 
-
 routerClient.post('/',createValidator,authMiddleware,checkRol("admin"),findClientCifUserId,ClientUserStatus(false),createClient)
 routerClient.put('/:id',updateClientValidator,authMiddleware,checkRol("admin"),findClientIdParams,ClientUserStatus(true),updateClient)
 routerClient.get('/',authMiddleware,checkRol("admin"),findClientsUserId,getClients)

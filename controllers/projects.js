@@ -5,17 +5,15 @@ const mongoose = require('mongoose');
 const createProject = async (req, res) => {//hecho
     try {
         const userId = req.user._id
-        const clientes = req.clientes
+        const client = req.client
         const project = req.project
         req = matchedData(req)
-        if(project){
+        if (project) {
             return res.status(404).send({ message: "Proyecto Creado" });
         }
-        if (clientes) {
-            const clienteExistente = clientes.some(cliente => cliente.userId.equals(userId));
-            if (!clienteExistente) {
-                return res.status(404).send({ message: "Cliente no pertenece al usuario" });
-            }
+        if (!client) {
+            return res.status(404).send({ message: "Cliente no pertenece al usuario" });
+
         }
         req.clientId = new mongoose.Types.ObjectId(req.clientId)
         const newUser = await ProjectModel.create(req);
@@ -30,17 +28,21 @@ const updateProyect = async (req, res) => {//hecho
         const project = req.project
         const projectId = req.params.id;
         req = matchedData(req)
+
+        if (!project) {
+            return res.status(404).json({ message: 'Proyecto no encontrado' });
+        }
         const clientId = req.clientId
-        if(clientId){
+        if (clientId) {
             const client = await ClientModel.findById(clientId);
-            if(!client){
+            if (!client) {
                 return res.status(500).send({ message: "Cliente Id No Existe" });
             }
         }
         const projectCode = req.projectCode
-        if(projectCode){
-            const proyectoExistente = await ProjectModel.findOne({projectCode});
-            if(proyectoExistente && !proyectoExistente._id.equals(projectId)){
+        if (projectCode) {
+            const proyectoExistente = await ProjectModel.findOne({ projectCode });
+            if (proyectoExistente && !proyectoExistente._id.equals(projectId)) {
                 return res.status(500).send({ message: "El Codigo del Proyecto Ya Existe" });
             }
         }
@@ -52,7 +54,7 @@ const updateProyect = async (req, res) => {//hecho
     }
 }
 
-const getProjects= async (req, res) => {
+const getProjects = async (req, res) => {
     try {
         const projects = req.projects
         res.status(200).send(projects);
@@ -106,6 +108,6 @@ const restoreProject = async (req, res) => {
 
 
 module.exports = {
-    createProject, updateProyect,getProjects,
-    getProject,deleteProject,restoreProject
+    createProject, updateProyect, getProjects,
+    getProject, deleteProject, restoreProject
 }

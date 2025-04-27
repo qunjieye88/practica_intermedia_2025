@@ -2,9 +2,14 @@ const UserModel = require("../models/user.js");
 const ClientModel = require("../models/client.js");
 const ProjectModel = require("../models/projects.js");
 const DeliveryNoteModel = require("../models/deliveryNote.js");
-const { encrypt} = require("../utils/handlePassword")
+const { encrypt } = require("../utils/handlePassword")
 
 /*
+
+error: cliente no asociado a usuario
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+    expect(response.body.error).toBe("El Cliente No Pertenece Al Usuario");
 
 error: falta token
 
@@ -18,6 +23,15 @@ error: token mal escrito
         .expect('Content-Type', /application\/json/);
     expect(response.body.error).toBe("Error de autenticacion");
 
+
+    user.role = "user"
+    const userUpdated = await user.save();
+
+error: sin permisos
+        .expect(403)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("ERROR PERMISO");
+
     
 error: campos incorrectos
     
@@ -30,7 +44,7 @@ error: campos incorrectos
     expect(response.body).toHaveProperty('user');
     expect(response.body.error).toBe("Error de autenticacion");
 
-*/ 
+*/
 
 const createUser = async (num) => {
 
@@ -47,7 +61,7 @@ const createUser = async (num) => {
     return user
 }
 
-const createClient = async (num, _id, userId) => {
+const createClient = async (num, userId) => {
     const data = {
         name: `${num}`,
         cif: `S0000000${num}`,
@@ -61,15 +75,11 @@ const createClient = async (num, _id, userId) => {
         userId: userId
     };
 
-    if (_id) {
-        data._id = _id;
-    }
-
     const client = await ClientModel.create(data);
     return client;
 }
 
-const createProject = async (num, _id, userId, clientId) => {
+const createProject = async (num, userId, clientId) => {
     const data = {
         name: `${num}`,
         projectCode: `Identificador: ${num}`,
@@ -86,15 +96,12 @@ const createProject = async (num, _id, userId, clientId) => {
         userId: userId
     };
 
-    if (_id) {
-        data._id = _id;
-    }
 
     const project = await ProjectModel.create(data);
     return project;
 }
 
-const createDeliveryNote = async (_id, userId, clientId,projectId) => {
+const createDeliveryNote = async (_id, userId, clientId, projectId) => {
     const data = {
         clientId: clientId,
         projectId: projectId,
@@ -102,7 +109,7 @@ const createDeliveryNote = async (_id, userId, clientId,projectId) => {
         items: [{
             "type": "hour",
             "hours": 1,
-            "description":"hola"
+            "description": "hola"
         }]
     };
 
@@ -114,4 +121,4 @@ const createDeliveryNote = async (_id, userId, clientId,projectId) => {
     return deliveryNote;
 }
 
-module.exports = {createUser,createProject,createClient,createDeliveryNote}
+module.exports = { createUser, createProject, createClient, createDeliveryNote }

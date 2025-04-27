@@ -1,8 +1,5 @@
 const { check } = require("express-validator")
 const validateResults = require("../utils/handleValidator")
-const { body } = require("express-validator");
-
-
 
 const createDeliveryNoteValidator = [
   check('projectId').exists().isMongoId(),

@@ -1,13 +1,14 @@
 const UserModel = require("../models/user.js");
 const { matchedData } = require("express-validator")
-const { encrypt, compare, hola } = require("../utils/handlePassword")
-const { tokenSign, verifyToken } = require("../utils/handleJwt.js")
+const { encrypt, compare } = require("../utils/handlePassword")
+const { tokenSign } = require("../utils/handleJwt.js")
 const { uploadToPinata } = require("../utils/handleUploadIPFS.js");
 
 const registerCtrl = async (req, res) => {//hecho
     try {
-        const user = req.user
         req = matchedData(req);
+        const email = req.email;
+        const user = await UserModel.findOne({email: email });
         if (user) {
             res.status(409).json({ error: "El correo ya está registrado" });
         } else {
@@ -29,7 +30,7 @@ const registerCtrl = async (req, res) => {//hecho
 
         }
     } catch (error) {
-        res.status(500).send({ error: error });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -51,7 +52,7 @@ const validatorUser = async (req, res) => {
             res.status(400).json({ error: "Usuario No Existe/Codigo incorrecto" });
         }
     } catch (error) {
-        res.status(500).send({ error: error });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -82,7 +83,7 @@ const loginUser = async (req, res) => {
             }
         }
     } catch (error) {
-        res.status(500).send({ error: error });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -94,7 +95,7 @@ const updateUser = async (req, res) => {
         const updatedUser = await user.save();
         res.status(200).json({ user: updatedUser });
     } catch (error) {
-        res.status(404).send({ error: "Error Update" });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -113,7 +114,7 @@ const patchCompany = async (req, res) => {
         const updatedUser = await user.save();
         res.status(200).json({ user: updatedUser });
     } catch (error) {
-        res.status(500).send({ error: error });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -133,7 +134,7 @@ const patchLogo = async (req, res) => {
             res.status(404).send("Usuario no existe")
         }
     } catch (error) {
-        res.status(500).send({ error: error });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -146,7 +147,7 @@ const getUser = async (req, res) => {
             res.status(404).json({ message: 'Usuario Eliminado o inexiet' });
         }
     } catch (error) {
-        res.status(500).send({ error: error });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -168,7 +169,7 @@ const deleteUser = async (req, res) => {
             }
         }
     } catch (error) {
-        res.status(500).send({ error: error });
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -186,7 +187,7 @@ const getCodePassword = async (req, res) => {
             res.status(201).send(data);
         }
     } catch (error) {
-        res.status(500).send({ error: error });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -207,7 +208,7 @@ const getPassword = async (req, res) => {
             }
         }
     } catch (error) {
-        res.status(500).send({ error: error });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -241,7 +242,7 @@ const createInvitation = async (req, res) => {
             }
         }
     } catch (error) {
-        res.status(500).send({ error: error });
+        res.status(500).json({ error: error.message });
     }
 }
 

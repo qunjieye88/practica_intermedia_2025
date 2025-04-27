@@ -1,11 +1,5 @@
-const UserModel = require("../models/user.js");
-const ClientModel = require("../models/client.js");
-const ProjectModel = require("../models/projects.js");
 const DeliveryNoteModel = require("../models/deliveryNote.js");
 const { matchedData } = require("express-validator")
-const { encrypt, compare, hola } = require("../utils/handlePassword")
-const { tokenSign, verifyToken } = require("../utils/handleJwt.js")
-const { uploadToPinata } = require("../utils/handleUploadIPFS.js");
 
 const createDeliveryNote = async (req, res) => {
     try {
@@ -34,7 +28,6 @@ const getDeliveryNotes = async (req, res) => {
         res.status(500).json({ message: "Error al crear el albarán", error: error.message });
     }
 };
-
 
 const getDeliveryNote = async (req, res) => {
     try {

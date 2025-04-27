@@ -2,13 +2,10 @@ const supertest = require('supertest')
 const { app, server } = require('../app.js')
 const mongoose = require('mongoose');
 const UserModel = require("../models/user.js");
-const { encrypt } = require("../utils/handlePassword")
 const { tokenSign } = require("../utils/handleJwt.js");
-const { createClient, createUser, createProject, createDeliveryNote } = require("../utils/create.js")
+const { createUser } = require("../utils/create.js")
+
 const api = supertest(app);
-
-
-let users;
 
 beforeAll(async () => {
     await new Promise((resolve) => mongoose.connection.once('connected', resolve));
@@ -18,7 +15,6 @@ beforeAll(async () => {
 });
 
 //post http://localhost:3000/api/user/register
-
 it('post http://localhost:3000/api/user/register error: correo ya registrado', async () => {
     const num = 0;
     const user = await createUser(num)
@@ -32,6 +28,7 @@ it('post http://localhost:3000/api/user/register error: correo ya registrado', a
         .expect('Content-Type', /application\/json/);
     expect(response.body.error).toBe("El correo ya está registrado");
 });
+
 it('post http://localhost:3000/api/user/register error: campos insuficientes', async () => {
     const response = await api
         .post('/api/user/register')
@@ -165,7 +162,6 @@ it('post http://localhost:3000/api/user/login error: usuario sin validar', async
         .expect('Content-Type', /application\/json/)
     expect(response.body.error).toBe("Usuario sin validar");
 });
-
 it('post http://localhost:3000/api/user/login error: correo no existente', async () => {
     const response = await api
         .post('/api/user/login')
@@ -175,9 +171,8 @@ it('post http://localhost:3000/api/user/login error: correo no existente', async
         })
         .expect(404)
         .expect('Content-Type', /application\/json/)
-    expect(response.body.error).toBe('Correo Incorrecto');
+    expect(response.body.error).toBe("Usuario No Encontrado");
 });
-
 it('post http://localhost:3000/api/user/login login faltan datos', async () => {
     const response = await api
         .post('/api/user/login')
@@ -392,9 +387,6 @@ it('patch http://localhost:3000/api/user/company sin errores (sin nombre ni cif)
         .expect('Content-Type', /application\/json/)
     expect(response.body).toHaveProperty('user');
 });
-
-
-
 afterAll(async () => {
     server.close()
     await mongoose.connection.close();

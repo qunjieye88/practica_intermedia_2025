@@ -33,5 +33,4 @@ const validatorUpdateProject = [
     }
 ]
 
-
 module.exports = {validatorRegisterProject,validatorUpdateProject}

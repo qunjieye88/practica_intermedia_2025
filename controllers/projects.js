@@ -2,24 +2,26 @@ const { matchedData } = require("express-validator");
 const ProjectModel = require("../models/projects");
 const ClientModel = require("../models/client");
 const mongoose = require('mongoose');
+const { isValidObjectId } = require('mongoose');
+
 const createProject = async (req, res) => {//hecho
     try {
         const userId = req.user._id
         const client = req.client
-        const project = req.project
         req = matchedData(req)
+        const projectCode = req.projectCode;
+        const project = await ProjectModel.findOne({ projectCode: projectCode });
         if (project) {
-            return res.status(404).send({ message: "Proyecto Creado" });
+            return res.status(404).send({ error: "Proyecto Creado" });
         }
         if (!client) {
-            return res.status(404).send({ message: "Cliente no pertenece al usuario" });
-
+            return res.status(404).send({ error: "Cliente no pertenece al usuario" });
         }
         req.clientId = new mongoose.Types.ObjectId(req.clientId)
-        const newUser = await ProjectModel.create(req);
-        res.status(200).send(newUser);
+        const newProject = await ProjectModel.create(req);
+        res.status(200).send({ project: newProject });
     } catch (error) {
-        res.status(500).send({ message: "Error Crear" });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -43,32 +45,32 @@ const updateProyect = async (req, res) => {//hecho
         if (projectCode) {
             const proyectoExistente = await ProjectModel.findOne({ projectCode });
             if (proyectoExistente && !proyectoExistente._id.equals(projectId)) {
-                return res.status(500).send({ message: "El Codigo del Proyecto Ya Existe" });
+                return res.status(500).send({ error: "El Codigo del Proyecto Ya Existe" });
             }
         }
         project.set(req);
         const updateProject = await project.save();
         res.status(200).send(updateProject);
     } catch (error) {
-        res.status(500).send({ message: "Error Actualizar" });
+        res.status(500).json({ error: error.message });
     }
 }
 
 const getProjects = async (req, res) => {
     try {
         const projects = req.projects
-        res.status(200).send(projects);
+        res.status(200).send({ projects: projects });
     } catch (error) {
-        res.status(500).send({ message: "Error Obtener Cliente" });
+        res.status(500).json({ error: error.message });
     }
 }
 
 const getProject = async (req, res) => {
     try {
         const project = req.project
-        res.status(200).send(project);
+        res.status(200).send({ project: project });
     } catch (error) {
-        res.status(500).send({ message: "Error Obtener Clientes" });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -80,28 +82,24 @@ const deleteProject = async (req, res) => {
             res.status(200).json({ project, message: 'Cliente eliminado (soft delete)' });
         } else {
             const deletedProject = await ProjectModel.findByIdAndDelete(project._id); // Hard delete
-            if (!deletedProject) {
-                res.status(404).json({ message: 'Proyecto no encontrado' });
-            } else {
-                res.status(200).json({ project: deletedProject, message: 'Cliente eliminado permanentemente (hard delete)' });
-            }
+            res.status(200).json({ project: deletedProject, message: 'Cliente eliminado permanentemente (hard delete)' });
         }
     } catch (err) {
-        res.status(500).json({ message: 'Error al eliminar el Cliente' });
+        res.status(500).json({ error: error.message });
     }
 };
 
 const restoreProject = async (req, res) => {
     try {
         const projectId = req.params.id;
-        const restored = await ProjectModel.restore({ _id: projectId });
-        if (!restored) {
-            return res.status(404).json({ message: "Cliente no encontrado o ya activo" });
-        }
 
-        res.status(200).json({ message: "Cliente restaurado correctamente" });
+        if (!isValidObjectId(projectId)) {
+            return res.status(400).json({ error: "ID inválido" });
+        }
+        const restored = await ProjectModel.restore({ _id: projectId });
+        res.status(200).json({ message: "Proyecto restaurado correctamente" });
     } catch (error) {
-        res.status(500).json({ message: "Error al restaurar el cliente", error });
+        res.status(500).json({ error: error.message });
     }
 };
 

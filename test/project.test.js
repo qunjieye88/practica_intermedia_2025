@@ -4,11 +4,10 @@ const mongoose = require('mongoose');
 const UserModel = require("../models/user.js");
 const ClientModel = require("../models/client.js");
 const ProjectModel = require("../models/projects.js");
-const { encrypt, compare, hola } = require("../utils/handlePassword")
-const { tokenSign, verifyToken } = require("../utils/handleJwt.js")
-const api = supertest(app);
-const { ObjectId } = require('mongodb');
+const { tokenSign } = require("../utils/handleJwt.js")
 const { createClient, createUser, createProject } = require("../utils/create.js")
+
+const api = supertest(app);
 
 beforeAll(async () => {
     await new Promise((resolve) => mongoose.connection.once('connected', resolve));
@@ -21,11 +20,11 @@ beforeAll(async () => {
     await ProjectModel.deleteMany({})
 })
 //post http://localhost:3000/api/project
-it('post http://localhost:3000/api/project error cliente no asociado a usuario', async () => {
+it('post http://localhost:3000/api/project error: cliente no asociado a usuario', async () => {
     const num = 0
-    const user = await createUser(num, null);
-    const userAux = await createUser(-99999 + num, null);
-    const client = await createClient(num, null, user._id);
+    const user = await createUser(num);
+    const userAux = await createUser(-99999 + num);
+    const client = await createClient(num, user._id);
     const token = await tokenSign({ _id: userAux._id, role: userAux.role })
     const data = {
         name: "Nombre del proyecto",
@@ -45,15 +44,14 @@ it('post http://localhost:3000/api/project error cliente no asociado a usuario',
         .post('/api/project')
         .set('Authorization', `Bearer ${token}`)
         .send(data)
-        .expect(404)
+        .expect(400)
         .expect('Content-Type', /application\/json/)
-    expect(response.body.message).toBe("Cliente no pertenece al usuario");
+    expect(response.body.error).toBe("El Cliente No Pertenece Al Usuario");
 });
-
-it('post http://localhost:3000/api/project no hay token', async () => {
+it('post http://localhost:3000/api/project error: falta token', async () => {
     const num = 1
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const data = {
         name: "Nombre del proyecto",
@@ -73,14 +71,14 @@ it('post http://localhost:3000/api/project no hay token', async () => {
         .post('/api/project')
         .send(data)
         .expect(401)
-        .expect('Content-Type', /text\/html/)
-    expect(response.text).toBe('NO TOKEN');
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe('NO TOKEN');
 });
 
-it('post http://localhost:3000/api/project error autentificacion de token', async () => {
+it('post http://localhost:3000/api/project error: token mal escrito', async () => {
     const num = 2
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const data = {
         name: "Nombre del proyecto",
@@ -101,30 +99,24 @@ it('post http://localhost:3000/api/project error autentificacion de token', asyn
         .set('Authorization', `Bearer ${token}s`)
         .send(data)
         .expect(403)
-        .expect('Content-Type', /text\/html/)
-    expect(response.text).toBe('Error de autenticacion');
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("Error de autenticacion");
 });
 
-it('post http://localhost:3000/api/project crear proyecto ya creado', async () => {
+it('post http://localhost:3000/api/project error: proyecto ya creado', async () => {
     const num = 3
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const data = {
-        name: `${num}`,
+        name: project.name,
         projectCode: project.projectCode,
-        email: `${num}@correo.es`,
-        address: {
-            "street": "Carlos V",
-            "number": 22,
-            "postal": 28936,
-            "city": "Móstoles",
-            "province": "Madrid"
-        },
-        code: `${num}`,
-        clientId: client._id,
-        userId: user._id
+        email: project.email,
+        address: project.address,
+        code: project.code,
+        clientId: project.clientId,
+        userId: project.userId
     }
     const response = await api
         .post('/api/project')
@@ -132,16 +124,46 @@ it('post http://localhost:3000/api/project crear proyecto ya creado', async () =
         .send(data)
         .expect(404)
         .expect('Content-Type', /application\/json/)
-    expect(response.body.message).toBe("Proyecto Creado");
+    expect(response.body.error).toBe("Proyecto Creado");
 });
 
-it('post http://localhost:3000/api/project error faltan datos', async () => {
+it('post http://localhost:3000/api/project error: campos incorrectos', async () => {
     const num = 4
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const data = {
         name: "Nombre del proyecto",
+        email: "miemail@gmail.com",
+        address: {
+            "street": "Carlos V",
+            "number": 22,
+            "postal": 28936,
+            "city": "Móstoles",
+            "province": "Madrid"
+        },
+        code: "Código interno del proyecto",
+        clientId: client._id
+    }
+    const response = await api
+        .post('/api/project')
+        .set('Authorization', `Bearer ${token}`)
+        .send(data)
+        .expect(422)
+        .expect('Content-Type', /application\/json/)
+    expect(response.body).toHaveProperty('errors');
+});
+
+it('post http://localhost:3000/api/project error: sin permisos', async () => {
+    const num = 5
+    const user = await createUser(num, null);
+    user.role = "user"
+    const userUpdated = await user.save();
+    const client = await createClient(num, null, user._id);
+    const token = await tokenSign({ _id: userUpdated._id, role: userUpdated.role })
+    const data = {
+        name: "Nombre del proyecto",
+        projectCode: "Identificador de proyecto",
         email: "miemail@gmail.com",
         address: {
             "street": "Carlos V",
@@ -157,15 +179,15 @@ it('post http://localhost:3000/api/project error faltan datos', async () => {
         .post('/api/project')
         .set('Authorization', `Bearer ${token}`)
         .send(data)
-        .expect(422)
-        .expect('Content-Type', /application\/json/)
-    expect(response.body).toHaveProperty('errors');
+        .expect(403)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("ERROR PERMISO");
 });
 
-it('post http://localhost:3000/api/project crear proyecto sin errores', async () => {
-    const num = 5
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
+it('post http://localhost:3000/api/project sin errores', async () => {
+    const num = 6
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const data = {
         name: "Nombre del proyecto",
@@ -187,16 +209,17 @@ it('post http://localhost:3000/api/project crear proyecto sin errores', async ()
         .send(data)
         .expect(200)
         .expect('Content-Type', /application\/json/)
+    expect(response.body).toHaveProperty('project');
 });
 
 //put http://localhost:3000/api/project/:id
 
-it('put http://localhost:3000/api/project error: cliente no asociado a usuario', async () => {
-    const num = 6
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
-    const userAux = await createUser(-99999 + num, null);
+it('put http://localhost:3000/api/project error: proyecto no asociado a usuario', async () => {
+    const num = 7
+    const user = await createUser(num);
+    const userAux = await createUser(-99999 + num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
     const token = await tokenSign({ _id: userAux._id, role: userAux.role })
     const data = {
         address: {
@@ -213,15 +236,14 @@ it('put http://localhost:3000/api/project error: cliente no asociado a usuario',
         .send(data)
         .expect(400)
         .expect('Content-Type', /application\/json/)
-    expect(response.body.message).toBe("El Proyecto No Existe/No pertenece al usuaro");
-
+    expect(response.body.error).toBe("El Proyecto No Pertenece Al Usuario");
 });
 
 it('put http://localhost:3000/api/project error: no hay token', async () => {
-    const num = 7
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
+    const num = 8
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const data = {
         address: {
@@ -236,15 +258,15 @@ it('put http://localhost:3000/api/project error: no hay token', async () => {
         .put(`/api/project/${project._id}`)
         .send(data)
         .expect(401)
-        .expect('Content-Type', /text\/html/)
-    expect(response.text).toBe('NO TOKEN');
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe('NO TOKEN');
 });
 
 it('put http://localhost:3000/api/project error: token mal escrito', async () => {
-    const num = 8
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
+    const num = 9
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const data = {
         address: {
@@ -260,15 +282,42 @@ it('put http://localhost:3000/api/project error: token mal escrito', async () =>
         .set('Authorization', `Bearer ${token}s`)
         .send(data)
         .expect(403)
-        .expect('Content-Type', /text\/html/)
-    expect(response.text).toBe('Error de autenticacion');
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("Error de autenticacion");
 });
 
-it('put http://localhost:3000/api/project error: cliente id incorrecto', async () => {
-    const num = 9
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
+it('put http://localhost:3000/api/project error: sin permisos', async () => {
+    const num = 10
+    const user = await createUser(num);
+    user.role = "user"
+    const userUpdated = await user.save();
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
+    const token = await tokenSign({ _id: userUpdated._id, role: userUpdated.role })
+    const data = {
+        address: {
+            "street": "Carlos V",
+            "number": 22,
+            "postal": 28936,
+            "city": "Móstoles",
+            "province": "Madrid"
+        }
+    }
+    const response = await api
+        .put(`/api/project/${project._id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send(data)
+        .expect(403)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("ERROR PERMISO");
+});
+
+
+it('put http://localhost:3000/api/project error: id incorrecto', async () => {
+    const num = 11
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const data = {
         address: {
@@ -280,18 +329,19 @@ it('put http://localhost:3000/api/project error: cliente id incorrecto', async (
         }
     }
     const response = await api
-        .put(`/api/project/${project._id}8`)
+        .put(`/api/project/${project._id}s`)
         .set('Authorization', `Bearer ${token}`)
         .send(data)
         .expect(400)
-        .expect('Content-Type', /application\/json/)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("ID inválido");
 });
 
 it('put http://localhost:3000/api/project sin errores', async () => {
-    const num = 10
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
+    const num = 12
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const data = {
         address: {
@@ -309,308 +359,381 @@ it('put http://localhost:3000/api/project sin errores', async () => {
         .expect(200)
         .expect('Content-Type', /application\/json/)
 });
+
+
+
+
 
 //get http://localhost:3000/api/client
 
-it('put http://localhost:3000/api/project error: sin token', async () => {
-    const num = 11
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
+it('get http://localhost:3000/api/project error: falta token', async () => {
+    const num = 13
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
         .get(`/api/project`)
         .expect(401)
-        .expect('Content-Type', /text\/html/)
-    expect(response.text).toBe('NO TOKEN');
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe('NO TOKEN');
 });
 
-it('put http://localhost:3000/api/project error: autentificacion del token', async () => {
-    const num = 12
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
+
+it('get http://localhost:3000/api/project error: token mal escrito', async () => {
+    const num = 14
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
         .get(`/api/project`)
         .set('Authorization', `Bearer ${token}s`)
         .expect(403)
-        .expect('Content-Type', /text\/html/)
-    expect(response.text).toBe('Error de autenticacion');
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("Error de autenticacion");
 });
 
+it('get http://localhost:3000/api/project error: sin permisos', async () => {
+    const num = 15
+    const user = await createUser(num);
+    user.role = "user"
+    const userUpdated = await user.save();
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
+    const token = await tokenSign({ _id: userUpdated._id, role: userUpdated.role })
+    const response = await api
+        .get(`/api/project`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(403)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("ERROR PERMISO");
+});
 
-it('put http://localhost:3000/api/project sin errores', async () => {
-    const num = 13
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
+it('get http://localhost:3000/api/project error: Sin clientes', async () => {
+    const num = 16
+    const user = await createUser(num);
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .get(`/api/project`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(404)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("Clientes No Encontrados");
+});
+
+it('get http://localhost:3000/api/project error: Sin proyectos', async () => {
+    const num = 17
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .get(`/api/project`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(404)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("Proyectos No Encontrados");
+});
+
+it('get http://localhost:3000/api/project sin errores', async () => {
+    const num = 18
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
         .get(`/api/project`)
         .set('Authorization', `Bearer ${token}`)
         .expect(200)
-        .expect('Content-Type', /application\/json/)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body).toHaveProperty('projects');
 });
+
 //get http://localhost:3000/api/project/:id
 
-it('put http://localhost:3000/api/project error: proyecto no pertenece al usuario', async () => {
-    const num = 14
-    const user = await createUser(num, null);
-    const userAux = await createUser(-99999 + num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
+it('get http://localhost:3000/api/project/:id error: proyecto no pertenece al usuario', async () => {
+    const num = 19
+    const user = await createUser(num);
+    const userAux = await createUser(-99999 + num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
     const token = await tokenSign({ _id: userAux._id, role: userAux.role })
     const response = await api
         .get(`/api/project/${project._id}`)
         .set('Authorization', `Bearer ${token}`)
         .expect(400)
         .expect('Content-Type', /application\/json/)
-    expect(response.body.message).toBe("El Proyecto No Existe/No pertenece al usuaro");
+    expect(response.body.error).toBe("El Proyecto No Pertenece Al Usuario");
 });
 
-it('put http://localhost:3000/api/project error: no hay token', async () => {
-    const num = 15
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
+it('get http://localhost:3000/api/project/:id error: falta token', async () => {
+    const num = 20
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
         .get(`/api/project/${project._id}`)
         .expect(401)
-        .expect('Content-Type', /text\/html/)
-    expect(response.text).toBe('NO TOKEN');
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe('NO TOKEN');
 });
 
-it('put http://localhost:3000/api/project error: autentificacion', async () => {
-    const num = 16
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
+it('get http://localhost:3000/api/project/:id error: token mal escrito', async () => {
+    const num = 21
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
         .get(`/api/project/${project._id}`)
         .set('Authorization', `Bearer ${token}s`)
         .expect(403)
-        .expect('Content-Type', /text\/html/)
-    expect(response.text).toBe('Error de autenticacion');
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("Error de autenticacion");
 });
 
-it('put http://localhost:3000/api/project error: id incorrecto', async () => {
-    const num = 17
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
+it('get http://localhost:3000/api/project/:id error: sin permisos', async () => {
+    const num = 22
+    const user = await createUser(num);
+    user.role = "user"
+    const userUpdated = await user.save();
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, userUpdated._id, userUpdated._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
-        .get(`/api/project/${project._id}5`)
+        .get(`/api/project/${project._id}`)
         .set('Authorization', `Bearer ${token}`)
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
+        .expect(403)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("ERROR PERMISO");
 });
 
+it('get http://localhost:3000/api/project/:id error: id incorrecto', async () => {
+    const num = 23
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .get(`/api/project/${project._id}s`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(400)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("ID inválido");
+});
 
-it('put http://localhost:3000/api/project sin errores', async () => {
-    const num = 18
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
+it('get http://localhost:3000/api/project/:id sin errores', async () => {
+    const num = 24
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
         .get(`/api/project/${project._id}`)
         .set('Authorization', `Bearer ${token}`)
         .expect(200)
-        .expect('Content-Type', /application\/json/)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body).toHaveProperty('project');
 });
 
 // delete http://localhost:3000/api/project/6809169a80c0972a28f8592a?soft=false
-
-it('delete http://localhost:3000/api/project error: proyecto no pertenece a usuario', async () => {
-    const num = 19
-    const user = await createUser(num, null);
-    const userAux = await createUser(-99999 + num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
+it('delete http://localhost:3000/api/project/:id?soft error: proyecto no pertenece a usuario', async () => {
+    const num = 25
+    const user = await createUser(num);
+    const userAux = await createUser(-99999 + num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
     const token = await tokenSign({ _id: userAux._id, role: userAux.role })
     const response = await api
         .delete(`/api/project/${project._id}?soft=true`)
         .set('Authorization', `Bearer ${token}`)
         .expect(400)
         .expect('Content-Type', /application\/json/)
-    expect(response.body.message).toBe("El Proyecto No Existe/No pertenece al usuaro");
+    expect(response.body.error).toBe("El Proyecto No Pertenece Al Usuario");
 });
 
-it('delete http://localhost:3000/api/project error: no hay token', async () => {
-    const num = 20
-    const user = await createUser(num, null);
-    const userAux = await createUser(-99999 + num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
-    const token = await tokenSign({ _id: userAux._id, role: userAux.role })
+it('delete http://localhost:3000/api/project/:id?soft error: falta token', async () => {
+    const num = 26
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
+    const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
         .delete(`/api/project/${project._id}?soft=true`)
         .expect(401)
-        .expect('Content-Type', /text\/html/)
-    expect(response.text).toBe('NO TOKEN');
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe('NO TOKEN');
 });
 
-it('delete http://localhost:3000/api/project error: autentificacion token', async () => {
-    const num = 21
-    const user = await createUser(num, null);
-    const userAux = await createUser(-99999 + num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
-    const token = await tokenSign({ _id: userAux._id, role: userAux.role })
+it('delete http://localhost:3000/api/project/:id?soft error: token mal escrito', async () => {
+    const num = 27
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
+    const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
         .delete(`/api/project/${project._id}?soft=true`)
         .set('Authorization', `Bearer ${token}s`)
         .expect(403)
-        .expect('Content-Type', /text\/html/)
-    expect(response.text).toBe('Error de autenticacion');
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("Error de autenticacion");
 });
 
-it('delete http://localhost:3000/api/project error: id mal puesto', async () => {
-    const num = 22
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
+it('delete http://localhost:3000/api/project/:id?soft error: sin permisos', async () => {
+    const num = 28
+    const user = await createUser(num);    
+    user.role = "user"
+    const userUpdated = await user.save();
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
+    const token = await tokenSign({ _id: userUpdated._id, role: userUpdated.role })
+    const response = await api
+        .delete(`/api/project/${project._id}?soft=true`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(403)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("ERROR PERMISO");
+});
+
+it('delete http://localhost:3000/api/project/:id?soft error: id Incorrecto', async () => {
+    const num = 29
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
         .delete(`/api/project/${project._id}s?soft=true`)
         .set('Authorization', `Bearer ${token}`)
         .expect(400)
-        .expect('Content-Type', /application\/json/)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("ID inválido");
 });
 
-it('delete http://localhost:3000/api/project error: eliminar proyecto ya eliminado ', async () => {
-    const num = 23
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
-    await project.delete();
+it('delete http://localhost:3000/api/project/:id?soft error: eliminar proyecto ya eliminado', async () => {
+    const num = 30
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
+    const deletedProject = await ProjectModel.findByIdAndDelete(project._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
         .delete(`/api/project/${project._id}?soft=true`)
         .set('Authorization', `Bearer ${token}`)
         .expect(400)
-        .expect('Content-Type', /application\/json/)
-    expect(response.body.message).toBe("Cannot read properties of null (reading 'clientId')");
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("Proyecto No Encontrado");
 });
 
-
-it('delete http://localhost:3000/api/project error: id mal puesto', async () => {
-    const num = 24
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
-    const token = await tokenSign({ _id: user._id, role: user.role })
-    const response = await api
-        .delete(`/api/project/${project._id}s?soft=false`)
-        .set('Authorization', `Bearer ${token}`)
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
-});
-
-it('delete http://localhost:3000/api/project sin errores soft delete', async () => {
-    const num = 25
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
+it('delete http://localhost:3000/api/project/:id?soft sin error (soft)', async () => {
+    const num = 31
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
         .delete(`/api/project/${project._id}?soft=true`)
         .set('Authorization', `Bearer ${token}`)
         .expect(200)
-    expect(response.body.message).toBe("Cliente eliminado (soft delete)");
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.message).toBe('Cliente eliminado (soft delete)');
 });
-
-it('delete http://localhost:3000/api/project sin errores haard delete', async () => {
-    const num = 26
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
+it('delete http://localhost:3000/api/project/:id?soft sin error (hard)', async () => {
+    const num = 32
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
     const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
         .delete(`/api/project/${project._id}?soft=false`)
         .set('Authorization', `Bearer ${token}`)
         .expect(200)
-    expect(response.body.message).toBe("Cliente eliminado permanentemente (hard delete)");
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.message).toBe('Cliente eliminado permanentemente (hard delete)');
+});
+
+
+//patch http://localhost:3000/api/project/680cf151c0cb272b1721ac7b
+
+it('patch http://localhost:3000/api/project/680cf151c0cb272b1721ac7b error: no hay token', async () => {
+    const num = 33
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
+    project.delete()
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .patch(`/api/project/${project._id}`)
+        .expect(401)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe('NO TOKEN');
+});
+
+it('patch http://localhost:3000/api/project/680cf151c0cb272b1721ac7b error: id Incorrecto', async () => {
+    const num = 34
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
+    project.delete()
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .patch(`/api/project/${project._id}s`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(400)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("ID inválido");
+});
+
+
+it('patch http://localhost:3000/api/project/680cf151c0cb272b1721ac7b error: token mal escrito', async () => {
+    const num = 35
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
+    project.delete()
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .patch(`/api/project/${project._id}`)
+        .set('Authorization', `Bearer ${token}s`)
+        .expect(403)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("Error de autenticacion");
+});
+
+it('patch http://localhost:3000/api/project/680cf151c0cb272b1721ac7b error: sin permisos', async () => {
+    const num = 36
+    const user = await createUser(num);    
+    user.role = "user"
+    const userUpdated = await user.save();
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
+    project.delete()
+    const token = await tokenSign({ _id: userUpdated._id, role: userUpdated.role })
+    const response = await api
+        .patch(`/api/project/${project._id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(403)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("ERROR PERMISO");
+});
+
+
+it('patch http://localhost:3000/api/project/680cf151c0cb272b1721ac7b sin errores', async () => {
+    const num = 38
+    const user = await createUser(num);
+    const client = await createClient(num, user._id);
+    const project = await createProject(num, user._id, client._id);
+    project.delete()
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .patch(`/api/project/${project._id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.message).toBe("Proyecto restaurado correctamente");
 });
 
 afterAll(async () => {
     server.close()
     await mongoose.connection.close();
 })
-
-//patch http://localhost:3000/api/project/680cf151c0cb272b1721ac7b
-
-
-it('patch http://localhost:3000/api/project/680cf151c0cb272b1721ac7b error: no hay token', async () => {
-    const num = 27
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
-    const token = await tokenSign({ _id: user._id, role: user.role })
-    const response = await api
-        .patch(`/api/project/${project._id}`)
-        .expect(401)
-        .expect('Content-Type', /text\/html/)
-    expect(response.text).toBe('NO TOKEN');
-});
-
-
-it('patch http://localhost:3000/api/project/680cf151c0cb272b1721ac7b error: error autentificacion', async () => {
-    const num = 28
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
-    const token = await tokenSign({ _id: user._id, role: user.role })
-    const response = await api
-        .patch(`/api/project/${project._id}`)
-        .set('Authorization', `Bearer ${token}s`)
-        .expect(403)
-        .expect('Content-Type', /text\/html/)
-    expect(response.text).toBe('Error de autenticacion');
-});
-
-
-it('patch http://localhost:3000/api/project/680cf151c0cb272b1721ac7b sin errores', async () => {
-    const num = 29
-    const user = await createUser(num, null);
-    const client = await createClient(num, null, user._id);
-    const project = await createProject(num, null, user._id, client._id);
-    const token = await tokenSign({ _id: user._id, role: user.role })
-    await project.delete();
-    const response = await api
-        .patch(`/api/project/${project._id}`)
-        .set('Authorization', `Bearer ${token}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
-        expect(response.body.message).toBe("Cliente restaurado correctamente");
-});
-
-/*
-
-        .expect(404)
-        .expect('Content-Type', /application\/json/)
-    expect(response.body.message).toBe("Cliente no pertenece al usuario");
-
-    
-        .expect(401)
-        .expect('Content-Type', /text\/html/)
-    expect(response.text).toBe('NO TOKEN');
-
-
-        .expect(403)
-        .expect('Content-Type', /text\/html/)
-    expect(response.text).toBe('Error de autenticacion');
-
-    ¡
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
-
-    
-        .expect(422)
-        .expect('Content-Type', /application\/json/)
-    expect(response.body).toHaveProperty('errors');
-*/

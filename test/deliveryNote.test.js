@@ -5,12 +5,10 @@ const UserModel = require("../models/user.js");
 const ClientModel = require("../models/client.js");
 const ProjectModel = require("../models/projects.js");
 const DeliveryNoteModel = require("../models/deliveryNote.js");
-const { encrypt, compare, hola } = require("../utils/handlePassword")
-const { tokenSign, verifyToken } = require("../utils/handleJwt.js")
-const api = supertest(app);
-const { ObjectId } = require('mongodb');
+const { tokenSign } = require("../utils/handleJwt.js")
 const { createClient, createUser, createProject, createDeliveryNote } = require("../utils/create.js")
 
+const api = supertest(app);
 
 beforeAll(async () => {
     await new Promise((resolve) => mongoose.connection.once('connected', resolve));

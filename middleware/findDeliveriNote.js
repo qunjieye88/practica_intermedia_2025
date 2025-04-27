@@ -4,7 +4,6 @@ const ProjectModel = require("../models/projects")
 const ClientModel = require("../models/client")
 const DeliveryNoteModel = require("../models/deliveryNote.js");
 const { matchedData } = require("express-validator")
-const { encrypt, compare } = require("../utils/handlePassword")
 
 const findDeliveriNoteUserIdClientIdProyectId = async (req, res, next) => {
     try {

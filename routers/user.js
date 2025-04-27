@@ -1,20 +1,23 @@
 const express = require('express');
+
 const { registerCtrl, validatorUser, loginUser,
     updateUser, patchCompany,
     patchLogo, getUser, deleteUser,
     getCodePassword, getPassword, createInvitation,
     getUsers, deleteAllUsers } = require("../controllers/user.js")
+
 const {
     validatorRegister, validatorValidator, validatorLogin,
     validatorUpdate, validatorCompany, validatorCodePassword,
     validatorPassword, validatorInviteUser
 } = require("../validators/user.js")
+
 const { uploadMiddlewareMemory } = require("../utils/handleStorage.js")
 
-
-const { checkRol, checkRolNot } = require("../middleware/rol.js")
+const { checkRol } = require("../middleware/rol.js")
 const { authMiddleware } = require("../middleware/session.js")
 const { findUserEmail } = require("../middleware/findUser.js")
+
 
 const routerUser = express.Router();
 
@@ -35,7 +38,7 @@ routerUser.use(express.json())
 *           security:
 *               - bearerAuth: []
 */
-routerUser.post('/register', validatorRegister,findUserEmail,registerCtrl)//hecho
+routerUser.post('/register', validatorRegister,registerCtrl)//hecho
 routerUser.put('/validation', validatorValidator, authMiddleware, validatorUser)//hecho
 routerUser.post('/login', validatorLogin, findUserEmail, loginUser)//hecho
 routerUser.put('/register', validatorUpdate, authMiddleware, updateUser)//hecho

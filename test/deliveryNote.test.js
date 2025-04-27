@@ -232,7 +232,7 @@ it('post http://localhost:3000/api/deliveryNote sin error entrada multiple', asy
         .expect('Content-Type', /application\/json/)
 });
 //Listar albaranes: GET /api/deliverynote
-it('get http://localhost:3000/api/deliveryNote error: sin albaranes', async () => {
+it('get http://localhost:3000/api/deliveryNote error: usuario sin albaranes', async () => {
     const num = 8
     const user = await createUser(num, null);
     const client = await createClient(num, null, user._id);

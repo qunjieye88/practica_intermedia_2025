@@ -3,13 +3,10 @@ const { app, server } = require('../app.js')
 const mongoose = require('mongoose');
 const UserModel = require("../models/user.js");
 const { encrypt } = require("../utils/handlePassword")
-const { tokenSign } = require("../utils/handleJwt.js")
+const { tokenSign } = require("../utils/handleJwt.js");
+const { createClient, createUser, createProject, createDeliveryNote } = require("../utils/create.js")
 const api = supertest(app);
 
-const createUser = {
-    email: "marcos@correo.es",
-    password: "createUser"
-}
 
 let users;
 
@@ -18,127 +15,27 @@ beforeAll(async () => {
     await api.delete('/api/user/deleteAllUsers')
         .expect(200)
         .expect('Content-Type', /application\/json/)
-
-    users = [
-        {//0
-            email: "0@correo.es",
-            password: await encrypt("12345678"),
-            emailCode: 999999,
-            status: 1,
-            role: "user"
-        },//1
-        {
-            email: "1@correo.es",
-            password: await encrypt("12345678"),
-            emailCode: 999999,
-            status: 0,
-            role: "user"
-        },//2
-        {
-            email: "2@correo.es",
-            password: await encrypt("12345678"),
-            emailCode: 999999,
-            status: 0,
-            role: "user"
-        },//3
-        {
-            email: "3@correo.es",
-            password: await encrypt("12345678"),
-            emailCode: 999999,
-            status: 0,
-            role: "user"
-        },//4
-        {
-            email: "4@correo.es",
-            password: await encrypt("12345678"),
-            emailCode: 999999,
-            status: 1,
-            role: "user"
-        },//5
-        {
-            email: "5@correo.es",
-            password: await encrypt("12345678"),
-            emailCode: 999999,
-            status: 1,
-            role: "user"
-        },//6
-        {
-            email: "6@correo.es",
-            password: await encrypt("12345678"),
-            emailCode: 999999,
-            status: 0,
-            role: "user"
-        },//7
-        {
-            email: "7@correo.es",
-            password: await encrypt("12345678"),
-            emailCode: 999999,
-            status: 1,
-            role: "user"
-        },//8
-        {
-            email: "8@correo.es",
-            password: await encrypt("12345678"),
-            emailCode: 999999,
-            status: 1,
-            role: "user"
-        },//9
-        {
-            email: "9@correo.es",
-            password: await encrypt("12345678"),
-            emailCode: 999999,
-            status: 1,
-            role: "user"
-        },//10
-        {
-            email: "10@correo.es",
-            password: await encrypt("12345678"),
-            emailCode: 999999,
-            status: 1,
-            role: "user"
-        },//11
-        {
-            name: "qunjieye",
-            nif: "40000000Q",
-            email: "11@correo.es",
-            password: await encrypt("12345678"),
-            emailCode: 999999,
-            status: 1,
-            role: "user"
-        },//12
-        {
-            email: "12@correo.es",
-            password: await encrypt("12345678"),
-            emailCode: 999999,
-            status: 1,
-            role: "user"
-        },//13
-        {
-            name: "qunjieye",
-            nif: "40000000Q",
-            email: "13@correo.es",
-            password: await encrypt("12345678"),
-            emailCode: 999999,
-            status: 1,
-            role: "user"
-        },//14
-        {
-            name: "qunjieye",
-            nif: "40000000Q",
-            email: "14@correo.es",
-            password: await encrypt("12345678"),
-            emailCode: 999999,
-            status: 1,
-            role: "user"
-        }
-    ];
-    await UserModel.insertMany(users);
 });
 
-it('post http://localhost:3000/api/user/register registrar usuario sin datos suficientes', async () => {
+//post http://localhost:3000/api/user/register
+
+it('post http://localhost:3000/api/user/register error: correo ya registrado', async () => {
+    const num = 0;
+    const user = await createUser(num)
     const response = await api
         .post('/api/user/register')
-        .send({ email: createUser.email })
+        .send({
+            email: user.email,
+            password: "createUser"
+        })
+        .expect(409)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("El correo ya está registrado");
+});
+it('post http://localhost:3000/api/user/register error: campos insuficientes', async () => {
+    const response = await api
+        .post('/api/user/register')
+        .send({ email: "marcos@correo.es" })
         .expect(422)
         .expect('Content-Type', /application\/json/)
     expect(response.body).toHaveProperty('errors');
@@ -147,38 +44,74 @@ it('post http://localhost:3000/api/user/register registrar usuario sin datos suf
 it('post http://localhost:3000/api/user/register usuario registrado sin errores', async () => {
     const response = await api
         .post('/api/user/register')
-        .send(createUser)
+        .send({
+            email: "marcos@correo.es",
+            password: "createUser"
+        })
         .expect(201)
         .expect('Content-Type', /application\/json/);
     expect(response.body).toHaveProperty('token');
     expect(response.body).toHaveProperty('user');
 });
 
-//0
-it('post http://localhost:3000/api/user/validation validar token usuario ya validado', async () => {
+//put http://localhost:3000/api/user/validation
+
+it('put http://localhost:3000/api/user/validation error: codigo incorrecto', async () => {
+    const num = 1;
+    const user = await createUser(num)
+    const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
-        .post('/api/user/register')
-        .send({ email: users[0].email, password: "12345678" })
-        .expect(409)
+        .put('/api/user/validation')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ code: 999998 })
+        .expect(400)
         .expect('Content-Type', /application\/json/)
-    expect(response.body).toHaveProperty('message');
+    expect(response.body.error).toBe("Usuario No Existe/Codigo incorrecto");
 });
 
-//1
-it('put http://localhost:3000/api/user/validation sin token', async () => {
-    const user = await UserModel.findOne(users[1])
+it('put http://localhost:3000/api/user/validation error: codigo incorrecto', async () => {
+    const num = 2;
+    const user = await createUser(num)
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .put('/api/user/validation')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ code: 999998 })
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+    expect(response.body.error).toBe("Usuario No Existe/Codigo incorrecto");
+});
+
+
+it('put http://localhost:3000/api/user/validation error: sin token', async () => {
+    const num = 3;
+    const user = await createUser(num)
     const emailCode = user.emailCode
     const response = await api
         .put('/api/user/validation')
         .send({ code: emailCode })
         .expect(401)
-        .expect('Content-Type', /text\/html/)
-
-    expect(response.text).toBe('NO TOKEN');
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe('NO TOKEN');
 });
-//2
-it('put http://localhost:3000/api/user/validation sin emailCode', async () => {
-    const user = await UserModel.findOne(users[2])
+
+it('put http://localhost:3000/api/user/validation error: token incorrecto', async () => {
+    const num = 4;
+    const user = await createUser(num)
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const emailCode = user.emailCode
+    const response = await api
+        .put('/api/user/validation')
+        .set('Authorization', `Bearer ${token}s`)
+        .send({ code: emailCode })
+        .expect(403)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("Error de autenticacion");
+});
+
+it('put http://localhost:3000/api/user/validation error: faltan parametros', async () => {
+    const num = 5;
+    const user = await createUser(num)
     const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
         .put('/api/user/validation')
@@ -188,9 +121,9 @@ it('put http://localhost:3000/api/user/validation sin emailCode', async () => {
     expect(response.body).toHaveProperty('errors');
 });
 
-//3
 it('put http://localhost:3000/api/user/validation sin errores', async () => {
-    const user = await UserModel.findOne(users[3])
+    const num = 6;
+    const user = await createUser(num)
     const emailCode = user.emailCode
     const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
@@ -199,50 +132,69 @@ it('put http://localhost:3000/api/user/validation sin errores', async () => {
         .send({ code: emailCode })
         .expect(200)
         .expect('Content-Type', /application\/json/)
-    expect(response.body.message.status).toBe(1);
+    expect(response.body.user.status).toBe(1);
 });
-//4
-it('post http://localhost:3000/api/user/login login con contraseña mal', async () => {
+
+//post http://localhost:3000/api/user/login
+it('post http://localhost:3000/api/user/login error: contraseña mal escrita', async () => {
+    const num = 7;
+    const user = await createUser(num)
     const response = await api
         .post('/api/user/login')
         .send({
-            email: users[4].email,
+            email: user.email,
             password: "malsdasda"
         })
         .expect(400)
         .expect('Content-Type', /application\/json/)
-    expect(response.body).toHaveProperty('message');
+    expect(response.body.error).toBe("Contraseña incorrecta");
 });
-//5
+
+it('post http://localhost:3000/api/user/login error: usuario sin validar', async () => {
+    const num = 8;
+    const user = await createUser(num)
+    user.status = 0;
+    const userUpdated = await user.save();
+    const response = await api
+        .post('/api/user/login')
+        .send({
+            email: userUpdated.email,
+            password: "12345678"
+        })
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+    expect(response.body.error).toBe("Usuario sin validar");
+});
+
+it('post http://localhost:3000/api/user/login error: correo no existente', async () => {
+    const response = await api
+        .post('/api/user/login')
+        .send({
+            email: "a@gmail.com",
+            password: "malsdasda"
+        })
+        .expect(404)
+        .expect('Content-Type', /application\/json/)
+    expect(response.body.error).toBe('Correo Incorrecto');
+});
+
 it('post http://localhost:3000/api/user/login login faltan datos', async () => {
     const response = await api
         .post('/api/user/login')
         .send({
-            email: users[5].email
         })
         .expect(422)
         .expect('Content-Type', /application\/json/)
     expect(response.body).toHaveProperty('errors');
 });
-//6
-it('post http://localhost:3000/api/user/login login del usuario sin validar', async () => {
-    const response = await api
-        .post('/api/user/login')
-        .send({
-            email: users[6].email,
-            password: "12345678"
-        })
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
-    expect(response.body).toHaveProperty('message');
-});
 
-//7
 it('post http://localhost:3000/api/user/login sin errores', async () => {
+    const num = 9;
+    const user = await createUser(num)
     const response = await api
         .post('/api/user/login')
         .send({
-            email: users[7].email,
+            email: user.email,
             password: "12345678"
         })
         .expect(201)
@@ -251,28 +203,12 @@ it('post http://localhost:3000/api/user/login sin errores', async () => {
     expect(response.body).toHaveProperty('user');
 });
 
-//8
-it('post http://localhost:3000/api/user/register correo ya existente', async () => {
+//put http://localhost:3000/api/user/register
+it('put http://localhost:3000/api/user/register error: falta token', async () => {
 
-    const user = await UserModel.findOne(users[8])
+    const num = 10;
+    const user = await createUser(num)
     const token = await tokenSign({ _id: user._id, role: user.role })
-    const response = await api
-        .put('/api/user/register')
-        .set('Authorization', `Bearer ${token}`)
-        .send({
-            email: users[7].email,
-            name: "qunjieye",
-            nif: "40000000Q",
-            role: "admin"
-        })
-        .expect(404)
-        .expect('Content-Type', /application\/json/)
-    expect(response.body).toHaveProperty('message');
-});
-//9
-it('post http://localhost:3000/api/user/register update usuario sin token', async () => {
-
-    const user = await UserModel.findOne(users[9])
     const response = await api
         .put('/api/user/register')
         .send({
@@ -281,13 +217,32 @@ it('post http://localhost:3000/api/user/register update usuario sin token', asyn
             role: "admin"
         })
         .expect(401)
-        .expect('Content-Type', /text\/html/)
-    expect(response.text).toBe('NO TOKEN');
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe('NO TOKEN');
 });
-//10
-it('post http://localhost:3000/api/user/register update usuario sin errores', async () => {
 
-    const user = await UserModel.findOne(users[10])
+it('put http://localhost:3000/api/user/register error: token mal escrito', async () => {
+
+    const num = 11;
+    const user = await createUser(num)
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .put('/api/user/register')
+        .set('Authorization', `Bearer ${token}s`)
+        .send({
+            name: "qunjieye",
+            nif: "40000000Q",
+            role: "admin"
+        })
+        .expect(403)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("Error de autenticacion");
+});
+
+it('put http://localhost:3000/api/user/register sin errores', async () => {
+
+    const num = 12;
+    const user = await createUser(num)
     const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
         .put('/api/user/register')
@@ -298,74 +253,105 @@ it('post http://localhost:3000/api/user/register update usuario sin errores', as
             role: "admin"
         })
         .expect(200)
-        .expect('Content-Type', /application\/json/)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body).toHaveProperty('user');
 });
-//11
-it('patch http://localhost:3000/api/user/company añadir compania sin errores sin nombre ni cif', async () => {
 
-    const user = await UserModel.findOne(users[11])
+//patch http://localhost:3000/api/user/company 
+it('patch http://localhost:3000/api/user/company error: falta token', async () => {
+
+    const num = 13;
+    const user = await createUser(num)
     const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
         .patch('/api/user/company')
-        .set('Authorization', `Bearer ${token}`)
         .send({
             company: {
                 street: "Carlos 67",
                 number: 22,
                 postal: 28936,
                 city: "Móstoles",
-                province: "Madrid"
-            }
-        })
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
-    expect(response.body).toHaveProperty('company');
-});
-//12
-it('patch http://localhost:3000/api/user/company añadir compania con error, sin nombre de usuario ni nombre de compania', async () => {
-
-    const user = await UserModel.findOne(users[12])
-    const token = await tokenSign({ _id: user._id, role: user.role })
-    const response = await api
-        .patch('/api/user/company')
-        .set('Authorization', `Bearer ${token}`)
-        .send({
-            company: {
-                street: "Carlos 67",
-                number: 22,
-                postal: 28936,
-                city: "Móstoles",
-                province: "Madrid"
-            }
-        })
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
-    expect(response.body).toHaveProperty('message');
-});
-
-//13
-it('patch http://localhost:3000/api/user/company añadir compania con error, sin token', async () => {
-
-    const user = await UserModel.findOne(users[13])
-    const response = await api
-        .patch('/api/user/company')
-        .send({
-            company: {
-                street: "Carlos 67",
-                number: 22,
-                postal: 28936,
-                city: "Móstoles",
-                province: "Madrid"
+                province: "Madrid",
+                name: "qunjieyse",
+                cif: "40000010Q"
             }
         })
         .expect(401)
-        .expect('Content-Type', /text\/html/)
-    expect(response.text).toBe('NO TOKEN');
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe('NO TOKEN');
 });
-//14
-it('patch http://localhost:3000/api/user/company añadir compania sin errores', async () => {
 
-    const user = await UserModel.findOne(users[14])
+it('patch http://localhost:3000/api/user/company error: token mal escrito', async () => {
+
+    const num = 14;
+    const user = await createUser(num)
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .patch('/api/user/company')
+        .set('Authorization', `Bearer ${token}s`)
+        .send({
+            company: {
+                street: "Carlos 67",
+                number: 22,
+                postal: 28936,
+                city: "Móstoles",
+                province: "Madrid",
+                name: "qunjieyse",
+                cif: "40000010Q"
+            }
+        })
+        .expect(403)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("Error de autenticacion");
+});
+
+it('patch http://localhost:3000/api/user/company error: token mal escrito', async () => {
+
+    const num = 15;
+    const user = await createUser(num)
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .patch('/api/user/company')
+        .set('Authorization', `Bearer ${token}s`)
+        .send({
+            company: {
+                street: "Carlos 67",
+                number: 22,
+                postal: 28936,
+                city: "Móstoles",
+                province: "Madrid",
+                name: "qunjieyse",
+                cif: "40000010Q"
+            }
+        })
+        .expect(403)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("Error de autenticacion");
+});
+
+it('patch http://localhost:3000/api/user/company error: campos incorrectos', async () => {
+
+    const num = 16;
+    const user = await createUser(num)
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .patch('/api/user/company')
+        .set('Authorization', `Bearer ${token}s`)
+        .send({
+            company: {
+                province: "Madrid",
+                name: "qunjieyse",
+                cif: "40000010Q"
+            }
+        }).expect(422)
+        .expect('Content-Type', /application\/json/)
+    expect(response.body).toHaveProperty('errors');
+});
+
+it('patch http://localhost:3000/api/user/company sin errores (con todos los datos)', async () => {
+
+    const num = 17;
+    const user = await createUser(num)
     const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
         .patch('/api/user/company')
@@ -380,11 +366,34 @@ it('patch http://localhost:3000/api/user/company añadir compania sin errores', 
                 name: "qunjieyse",
                 cif: "40000010Q"
             }
-        })
-        .expect(200)
+        }).expect(200)
         .expect('Content-Type', /application\/json/)
-    expect(response.body).toHaveProperty('company');
+    expect(response.body).toHaveProperty('user');
 });
+
+
+it('patch http://localhost:3000/api/user/company sin errores (sin nombre ni cif)', async () => {
+
+    const num = 18;
+    const user = await createUser(num)
+    const token = await tokenSign({ _id: user._id, role: user.role })
+    const response = await api
+        .patch('/api/user/company')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            company: {
+                street: "Carlos 67",
+                number: 22,
+                postal: 28936,
+                city: "Móstoles",
+                province: "Madrid",
+            }
+        }).expect(200)
+        .expect('Content-Type', /application\/json/)
+    expect(response.body).toHaveProperty('user');
+});
+
+
 
 afterAll(async () => {
     server.close()

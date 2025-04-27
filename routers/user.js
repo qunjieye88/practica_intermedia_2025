@@ -35,11 +35,11 @@ routerUser.use(express.json())
 *           security:
 *               - bearerAuth: []
 */
-routerUser.post('/register', validatorRegister, registerCtrl)//hecho
+routerUser.post('/register', validatorRegister,findUserEmail,registerCtrl)//hecho
 routerUser.put('/validation', validatorValidator, authMiddleware, validatorUser)//hecho
 routerUser.post('/login', validatorLogin, findUserEmail, loginUser)//hecho
 routerUser.put('/register', validatorUpdate, authMiddleware, updateUser)//hecho
-routerUser.patch('/company', validatorCompany, authMiddleware, checkRolNot("guest"), patchCompany)//hecho
+routerUser.patch('/company', validatorCompany, authMiddleware, checkRol("admin"), patchCompany)//hecho
 routerUser.patch('/logo', uploadMiddlewareMemory.single("image"), authMiddleware, patchLogo)//hecho
 routerUser.get('/', authMiddleware, getUser)//hecho
 routerUser.delete('/', authMiddleware, deleteUser)//hecho

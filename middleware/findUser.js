@@ -12,7 +12,7 @@ const findUserEmail = async (req, res, next) => {
         req.user = user;
         next();
     } catch (error) {
-        return res.status(500).json({ message: 'Error al buscar usuario por email' });
+        res.status(500).send({ error: error });
     }
 };
 
@@ -24,7 +24,7 @@ const findUserId = async (req, res, next) => {
         req.user = user;
         next();
     } catch (error) {
-        return res.status(500).json({ message: 'Error al buscar usuario por email' });
+        res.status(500).send({ error: error });
     }
 };
 

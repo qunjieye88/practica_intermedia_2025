@@ -35,6 +35,20 @@ const getDeliveryNotes = async (req, res) => {
     }
 };
 
+
+const getDeliveryNote = async (req, res) => {
+    try {
+        const deliveryNote = req.deliveryNote;
+
+        if (deliveryNote.length) {
+            return res.status(400).send({ message: "No hay albaranes" });
+        }
+        res.status(200).json(deliveryNote);
+    } catch (error) {
+        res.status(500).json({ message: "Error al crear el albarán", error: error.message });
+    }
+};
+
 module.exports = {
-    createDeliveryNote,getDeliveryNotes
+    createDeliveryNote,getDeliveryNotes,getDeliveryNote
 }

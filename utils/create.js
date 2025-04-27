@@ -4,9 +4,35 @@ const ProjectModel = require("../models/projects.js");
 const DeliveryNoteModel = require("../models/deliveryNote.js");
 const { encrypt} = require("../utils/handlePassword")
 
+/*
+
+error: falta token
+
+        .expect(401)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe('NO TOKEN');
+
+error: token mal escrito
+
+        .expect(403)
+        .expect('Content-Type', /application\/json/);
+    expect(response.body.error).toBe("Error de autenticacion");
+
+    
+error: campos incorrectos
+    
+        .expect(422)
+        .expect('Content-Type', /application\/json/)
+    expect(response.body).toHaveProperty('errors');
 
 
-const createUser = async (num, _id) => {
+    
+    expect(response.body).toHaveProperty('user');
+    expect(response.body.error).toBe("Error de autenticacion");
+
+*/ 
+
+const createUser = async (num) => {
 
     const data = {
         name: `${num}`,
@@ -16,10 +42,6 @@ const createUser = async (num, _id) => {
         emailCode: 999999,
         status: 1,
         role: "admin"
-    }
-
-    if (_id) {
-        data._id = _id
     }
     const user = await UserModel.create(data);
     return user

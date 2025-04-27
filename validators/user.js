@@ -22,7 +22,6 @@ const validatorLogin = [
     }
 ]
 const validatorUpdate = [
-    check("email").optional().notEmpty().isEmail(),
     check("company").optional().notEmpty().isString(),
     check("name").optional().notEmpty().isString(),
     check("surnames").optional().notEmpty().isString(),
@@ -36,11 +35,11 @@ const validatorUpdate = [
 const validatorCompany = [
     check("company.name").optional().notEmpty(),
     check("company.cif").optional().notEmpty().isLength({ min: 9, max: 9 }),
-    check("company.street").optional().notEmpty(),
-    check("company.number").optional().isInt({ min: 1 }),
-    check("company.postal").optional().isPostalCode("ES"),
-    check("company.city").optional().notEmpty(),
-    check("company.province").optional().notEmpty(),
+    check("company.street").exists().notEmpty(),
+    check("company.number").exists().isInt({ min: 1 }),
+    check("company.postal").exists().isPostalCode("ES"),
+    check("company.city").exists().notEmpty(),
+    check("company.province").exists().notEmpty(),
     (req, res, next) => {
         return validateResults(req, res, next)
     }

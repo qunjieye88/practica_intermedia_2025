@@ -5,8 +5,8 @@ const { authMiddleware } = require("../middleware/session.js")
 const { findUserId } = require("../middleware/findUser.js")
 const { findClientCif, findClientIdParams, findClientId, findClientsUserId, ClientUserStatus } = require("../middleware/findClient.js")
 const { findProjectProjectCode, findProyectId, findProjectsId, ProjectUserStatus, projectClientStatus } = require("../middleware/findProject.js")
-const { findDeliveriNoteUserIdClientIdProyectId, findAllDeliveriNoteUserId } = require("../middleware/findDeliveriNote.js")
-const { createDeliveryNote, getDeliveryNotes } = require("../controllers/deliveryNote.js")
+const { findDeliveriNoteUserIdClientIdProyectId, findAllDeliveriNoteUserId,findDeliveriNoteIdParam } = require("../middleware/findDeliveriNote.js")
+const { createDeliveryNote, getDeliveryNotes,getDeliveryNote } = require("../controllers/deliveryNote.js")
 const { createDeliveryNoteValidator } = require("../validators/deliveryNote.js")
 
 
@@ -19,6 +19,7 @@ reouterDeliveryNote.post('/', createDeliveryNoteValidator, authMiddleware,
     createDeliveryNote)
 
 reouterDeliveryNote.get('/', authMiddleware, checkRol("admin"), findAllDeliveriNoteUserId, getDeliveryNotes);
+reouterDeliveryNote.get('/:id', authMiddleware, checkRol("admin"),findDeliveriNoteIdParam, getDeliveryNote);
 
 /*reouterDeliveryNote.get('/:id', deliveryNoteController.getDeliveryNoteById);
 

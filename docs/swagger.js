@@ -4,7 +4,7 @@ const options = {
         openapi: "3.0.3",
         info: {
             title: "Tracks - Express API with Swagger (OpenAPI 3.0)",
-            version: "0.1.0",
+            version: "1.0.0",
             description:
                 "This is a CRUD API application made with Express and documented with Swagger",
             license: {
@@ -14,7 +14,7 @@ const options = {
             contact: {
                 name: "u-tad",
                 url: "https://u-tad.com",
-                email: "ricardo.palacios@u-tad.com",
+                email: "qunjie.ye@u-tad.com",
             },
         },
         servers: [
@@ -25,4 +25,5 @@ const options = {
     },
     apis: ["./routers/*.js"],
 };
+
 module.exports = swaggerJsdoc(options)

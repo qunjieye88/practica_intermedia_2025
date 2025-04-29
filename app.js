@@ -25,6 +25,7 @@ app.use("/api/user", routerUser);
 app.use("/api/client", routerClient);
 app.use("/api/project", routerProyect);
 app.use("/api/deliveryNote", routerDeliveryNote);
+
 // Conectar a la base de datos
 dbConnect();
 

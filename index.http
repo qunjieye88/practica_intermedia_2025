@@ -1,5 +1,3 @@
-//Crear una cuenta de usuario: POST /api/user/register
-//testeado
 POST http://localhost:3000/api/user/register
 Content-Type: application/json
 
@@ -8,10 +6,7 @@ Content-Type: application/json
     "password": "12345678"
 }
 
-
 ###
-//Validar el correo a través de un código recibido en el mismo: PUT /api/user/validation
-//testeado
 put http://localhost:3000/api/user/validation
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
 Content-Type: application/json
@@ -21,8 +16,6 @@ Content-Type: application/json
 }
 
 ###
-//Login en la aplicación (devuelve un token de sesión): POST /api/user/login
-//testeado
 POST http://localhost:3000/api/user/login
 Content-Type: application/json
 
@@ -31,8 +24,6 @@ Content-Type: application/json
     "password": "12345678"
 }
 ###
-//Introducir datos personales del usuario: PATH o PUT /api/user
-//testeado
 put http://localhost:3000/api/user/register
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
 Content-Type: application/json
@@ -43,8 +34,6 @@ Content-Type: application/json
     "role":"admin"
 }
 ###
-//Introducir datos de compañía: PATCH /api/user/company
-//testeado
 patch http://localhost:3000/api/user/company
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
 Content-Type: application/json
@@ -78,13 +67,11 @@ get http://localhost:3000/api/user
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
 Content-Type: application/json
 
-//Eliminar usuario física (hard delete) y lógicamente (soft delete)
 ###
 delete http://localhost:3000/api/user?soft=false
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Y2MzdkMzllNmY3MTMzYmJmNDljMTEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NDE4OTM5NSwiZXhwIjoxNzQ0Mjc1Nzk1fQ.0pVvCK6H0Ry9WXk8ev3fPJpRIE-DzoI8npsoXK6J0_s
 Content-Type: application/json
 
-//Recuperar contraseña
 ###
 get http://localhost:3000/api/user/codePassword
 Content-Type: application/json
@@ -102,7 +89,7 @@ Content-Type: application/json
     "code": 632982,
     "password" : "12345678"
 }
-//Invitar a otro usuario como parte de tu compañía
+
 ###
 post http://localhost:3000/api/user/invite
 Content-Type: application/json
@@ -123,10 +110,6 @@ Content-Type: application/json
 delete http://localhost:3000/api/user/deleteAllUsers
 Content-Type: application/json
 
-
-
-//CLIENTE
-//Crear un cliente: POST /api/client
 ###
 post http://localhost:3000/api/client
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
@@ -143,7 +126,7 @@ Content-Type: application/json
     "province": "Madrid"
     }
 }
-//actualizarlo PUT
+
 ###
 put http://localhost:3000/api/client/6810c8638e0c578ef8121698
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
@@ -158,25 +141,22 @@ Content-Type: application/json
     "province": "Madrid"
   }
 }
-//Si ya hay clientes, mostrarlos todos: GET /api/client 680bc71ae86764d4689efc28
+
 ###
 get http://localhost:3000/api/client
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
 Content-Type: application/json
 
-//y uno en concreto: GET /api/client/{id}
 ###
 get http://localhost:3000/api/client/6810c8638e0c578ef8121698
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
 Content-Type: application/json
 
-//Archivar (soft delete) y borrar un cliente (hard delete)
 ###
 delete http://localhost:3000/api/client/680bc6ffe86764d4689efc24?soft=true
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDU1ODI5OTgsImV4cCI6MTc0NTY2OTM5OH0.v32sVkOhCjx33VwtrwKvqlL7iKuAGWWKrrjE_5bKy_Y
 Content-Type: application/json
 
-//Lista los clientes archivados y recuperar uno en concreto (pasarlo a no borrado)
 ###
 patch http://localhost:3000/api/client/680bc6ffe86764d4689efc24
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDU1ODI5OTgsImV4cCI6MTc0NTY2OTM5OH0.v32sVkOhCjx33VwtrwKvqlL7iKuAGWWKrrjE_5bKy_Y
@@ -184,7 +164,6 @@ Content-Type: application/json
 
 
 //Proyect
-//Crear un proyecto asociado a un usuario y cliente: POST /api/project
 ###
 post http://localhost:3000/api/project
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
@@ -205,7 +184,6 @@ Content-Type: application/json
   "clientId": "6810c8638e0c578ef8121698"
 }
 
-//Además, si quiero actualizarlo: PUT /api/project/{projectId}
 ###
 put http://localhost:3000/api/project/6810c8908e0c578ef81216b6
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
@@ -225,25 +203,21 @@ Content-Type: application/json
   "code": "Código interno del proyecto",
   "notes":"asdasdasd"
 }
-//Mostrar todos GET /api/project 
 ###
 get http://localhost:3000/api/project
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
 Content-Type: application/json
 
-//o un proyecto específico: GET
 ###
 get http://localhost:3000/api/project/6810c8908e0c578ef81216b6
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
 Content-Type: application/json
 
-//Archivar (soft delete) y borrar un proyecto (hard delete)
 ###
 delete http://localhost:3000/api/project/680cf34bfa5e3748fe40b351?soft=false
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDU2Nzc1NTMsImV4cCI6MTc0NTc2Mzk1M30.NtUzxDFNk2fDy556Svix6ou0svz5qYzF83WdlYs21nM
 Content-Type: application/json
 
-//Lista los proyectos archivados y recuperar uno en concreto (pasarlo a no borrado)
 ###
 patch http://localhost:3000/api/project/680cf34bfa5e3748fe40b351
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODA3YzUwN2IwZWIwZWI4NGY5NWI2NTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDU2Nzc1NTMsImV4cCI6MTc0NTc2Mzk1M30.NtUzxDFNk2fDy556Svix6ou0svz5qYzF83WdlYs21nM
@@ -252,7 +226,6 @@ Content-Type: application/json
 
 //DELIVERYNOTE
 
-//
 ###
 post http://localhost:3000/api/deliveryNote
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA

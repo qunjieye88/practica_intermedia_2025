@@ -7,11 +7,10 @@ const createClient = async (req, res) => {//hecho
         const userId = req.user._id
         req = matchedData(req);
         const cif = req.cif;
-        const client = await ClientModel.findOne({ cif: cif, userId: userId });
+        const client = await ClientModel.findOne({ cif: cif, userId: userId })
         if (client) {
             return res.status(400).send({ error: "El Cliente Pertenece Al Usuario" });
         }
-        req = matchedData(req)
         const newnueClient = await ClientModel.create({
             ...req,
             userId: new mongoose.Types.ObjectId(userId)

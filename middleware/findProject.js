@@ -79,6 +79,8 @@ const ProjectUserStatus = (status) => async (req, res, next) => {
     try {
         const userId = req.user._id;
         const project = req.project
+        console.log(req.user)
+        console.log(req.project)
 
         if (project) {
             if (userId.equals(project.userId) === status) {
@@ -110,15 +112,15 @@ const projectClientStatus = (status) => async (req, res, next) => {
             if (clientId.equals(project.clientId) === status) {
                 next()
             } else if (status === false) {
-                res.status(400).json({ message: "El Proyecto Pertenece Al Clinte" });
+                res.status(400).json({ error: "El Proyecto Pertenece Al Clinte" });
             } else {
-                res.status(400).json({ message: "El Proyecto No Pertenece Al Clinte" });
+                res.status(400).json({ error: "El Proyecto No Pertenece Al Clinte" });
             }
         } else {
             if (status === false) {
                 next()
             } else {
-                res.status(400).json({ message: "El Proyecto No Existe/No pertenece al Clinte" });
+                res.status(400).json({ error: "El Proyecto No Existe/No pertenece al Clinte" });
             }
         }
     } catch (error) {

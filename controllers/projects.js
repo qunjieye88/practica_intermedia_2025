@@ -18,7 +18,7 @@ const createProject = async (req, res) => {//hecho
             return res.status(404).send({ error: "Cliente no pertenece al usuario" });
         }
         req.clientId = new mongoose.Types.ObjectId(req.clientId)
-        const newProject = await ProjectModel.create(req);
+        const newProject = await ProjectModel.create({...req,userId});
         res.status(200).send({ project: newProject });
     } catch (error) {
         res.status(500).json({ error: error.message });

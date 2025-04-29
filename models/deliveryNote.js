@@ -14,6 +14,9 @@ const DeliveryNoteScheme = new mongoose.Schema(
         hours: Number
       }
     ],
+    sign: {
+      type: String
+    }
   },
   {
     timestamps: true,

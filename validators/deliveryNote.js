@@ -3,7 +3,6 @@ const validateResults = require("../utils/handleValidator")
 
 const createDeliveryNoteValidator = [
   check('projectId').exists().isMongoId(),
-  check('userId').exists().isMongoId(),
   check('clientId').exists().isMongoId(),
   check('items').exists().isArray({ min: 1 }).custom((items) => {
     for (const item of items) {

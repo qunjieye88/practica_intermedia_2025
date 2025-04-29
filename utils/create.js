@@ -101,7 +101,7 @@ const createProject = async (num, userId, clientId) => {
     return project;
 }
 
-const createDeliveryNote = async (_id, userId, clientId, projectId) => {
+const createDeliveryNote = async ( userId, clientId, projectId) => {
     const data = {
         clientId: clientId,
         projectId: projectId,
@@ -113,9 +113,6 @@ const createDeliveryNote = async (_id, userId, clientId, projectId) => {
         }]
     };
 
-    if (_id) {
-        data._id = _id;
-    }
 
     const deliveryNote = await DeliveryNoteModel.create(data);
     return deliveryNote;

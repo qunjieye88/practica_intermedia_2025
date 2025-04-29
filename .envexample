@@ -2,6 +2,8 @@ PORT = puerto a conectar
 
 DB_URI = url de base de datos
 
+DB_URI_TEST = base de datos de prueba
+
 PUBLIC_URL = url publica
 
 PINATA_GATEWAY_URL = url de pinata

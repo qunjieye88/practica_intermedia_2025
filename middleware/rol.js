@@ -7,7 +7,6 @@ const checkRol = (roles) => (req, res, next) => {
     } else {
         handleHttpError(res, "ERROR PERMISO", 403)
     }
-    //console.log(req.authorization)
 }
 
 const checkRolNot = (roles) => (req, res, next) => {
@@ -17,7 +16,6 @@ const checkRolNot = (roles) => (req, res, next) => {
     } else {
         next()
     }
-    //console.log(req.authorization)
 }
 
 module.exports = { checkRol,checkRolNot }

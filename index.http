@@ -2,17 +2,17 @@ POST http://localhost:3000/api/user/register
 Content-Type: application/json
 
 {
-    "email": "1@example.com",
+    "email": "jieyequn@gmail.com",
     "password": "12345678"
 }
 
 ###
 put http://localhost:3000/api/user/validation
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODExZjgwYjMxYzdhODViYmRjZmE2YWEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NjAwODA3NSwiZXhwIjoxNzQ2MDk0NDc1fQ.mFgVhgRfuGgqtRK8xh4-F48Rv9mfAG0XLDEj42Yy4zM
 Content-Type: application/json
 
 {
-    "code": "992517"
+    "code": "552211"
 }
 
 ###
@@ -20,12 +20,12 @@ POST http://localhost:3000/api/user/login
 Content-Type: application/json
 
 {
-    "email": "1@example.com",
+    "email": "jieyequn@gmail.com",
     "password": "12345678"
 }
 ###
 put http://localhost:3000/api/user/register
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODExZjgwYjMxYzdhODViYmRjZmE2YWEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NjAwODA3NSwiZXhwIjoxNzQ2MDk0NDc1fQ.mFgVhgRfuGgqtRK8xh4-F48Rv9mfAG0XLDEj42Yy4zM
 Content-Type: application/json
 
 {
@@ -35,7 +35,7 @@ Content-Type: application/json
 }
 ###
 patch http://localhost:3000/api/user/company
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODExZjgwYjMxYzdhODViYmRjZmE2YWEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NjAwODA3NSwiZXhwIjoxNzQ2MDk0NDc1fQ.mFgVhgRfuGgqtRK8xh4-F48Rv9mfAG0XLDEj42Yy4zM
 Content-Type: application/json
 
 {
@@ -52,7 +52,7 @@ Content-Type: application/json
 
 ###
 PATCH  http://localhost:3000/api/user/logo
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODExZjgwYjMxYzdhODViYmRjZmE2YWEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NjAwODA3NSwiZXhwIjoxNzQ2MDk0NDc1fQ.mFgVhgRfuGgqtRK8xh4-F48Rv9mfAG0XLDEj42Yy4zM
 Content-Type: multipart/form-data; boundary=boundary123
 
 --boundary123
@@ -112,7 +112,7 @@ Content-Type: application/json
 
 ###
 post http://localhost:3000/api/client
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODExZjgwYjMxYzdhODViYmRjZmE2YWEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NjAwODA3NSwiZXhwIjoxNzQ2MDk0NDc1fQ.mFgVhgRfuGgqtRK8xh4-F48Rv9mfAG0XLDEj42Yy4zM
 Content-Type: application/json
 
 {
@@ -128,8 +128,8 @@ Content-Type: application/json
 }
 
 ###
-put http://localhost:3000/api/client/6810c8638e0c578ef8121698
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
+put http://localhost:3000/api/client/6811f8e031c7a85bbdcfa6b9
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODExZjgwYjMxYzdhODViYmRjZmE2YWEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NjAwODA3NSwiZXhwIjoxNzQ2MDk0NDc1fQ.mFgVhgRfuGgqtRK8xh4-F48Rv9mfAG0XLDEj42Yy4zM
 Content-Type: application/json
 
 {
@@ -166,7 +166,7 @@ Content-Type: application/json
 //Proyect
 ###
 post http://localhost:3000/api/project
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODExZjgwYjMxYzdhODViYmRjZmE2YWEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NjAwODA3NSwiZXhwIjoxNzQ2MDk0NDc1fQ.mFgVhgRfuGgqtRK8xh4-F48Rv9mfAG0XLDEj42Yy4zM
 Content-Type: application/json
 
 {
@@ -181,7 +181,7 @@ Content-Type: application/json
     "province": "Madrid"
   },
   "code": "Código interno del proyecto",
-  "clientId": "6810c8638e0c578ef8121698"
+  "clientId": "6811f8e031c7a85bbdcfa6b9"
 }
 
 ###
@@ -228,12 +228,12 @@ Content-Type: application/json
 
 ###
 post http://localhost:3000/api/deliveryNote
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODExZjgwYjMxYzdhODViYmRjZmE2YWEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDY1NDE5NzUsImV4cCI6MTc0NjYyODM3NX0.iFMACQxZZHmNOFwjQY2GU8k_RFegI7S8nIqhHchlkI8
 Content-Type: application/json
 
 {
-  "clientId": "6810c8638e0c578ef8121698",
-  "projectId": "6810c8908e0c578ef81216b6",
+  "clientId": "6811f8e031c7a85bbdcfa6b9",
+  "projectId": "6811f8f731c7a85bbdcfa6c1",
   "items": [{
     "type": "hour",
     "hours": 1,
@@ -243,22 +243,23 @@ Content-Type: application/json
 
 ###
 get http://localhost:3000/api/deliveryNote
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODExZjgwYjMxYzdhODViYmRjZmE2YWEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDY1NDE5NzUsImV4cCI6MTc0NjYyODM3NX0.iFMACQxZZHmNOFwjQY2GU8k_RFegI7S8nIqhHchlkI8
+Content-Type: application/json
+
+
+###
+get http://localhost:3000/api/deliveryNote/681a1ec11197300ac532e287
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODExZjgwYjMxYzdhODViYmRjZmE2YWEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDY1Mzc4MTIsImV4cCI6MTc0NjYyNDIxMn0.BlMWn44kQf2w_-g7P2K8Yv6RaMqGeaoV-UCJmYS7r-k
 Content-Type: application/json
 
 ###
-get http://localhost:3000/api/deliveryNote/6810d2fa777fbb7fcee3460b
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
+get http://localhost:3000/api/deliveryNote/pdf/681a1ec11197300ac532e287
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODExZjgwYjMxYzdhODViYmRjZmE2YWEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDY1Mzc4MTIsImV4cCI6MTc0NjYyNDIxMn0.BlMWn44kQf2w_-g7P2K8Yv6RaMqGeaoV-UCJmYS7r-k
 Content-Type: application/json
 
 ###
-get http://localhost:3000/api/deliveryNote/pdf/6810d2fa777fbb7fcee3460b
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
-Content-Type: application/json
-
-###
-patch http://localhost:3000/api/deliveryNote/sign/6810d2fa777fbb7fcee3460b
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
+patch http://localhost:3000/api/deliveryNote/sign/681a1ec11197300ac532e287
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODExZjgwYjMxYzdhODViYmRjZmE2YWEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDY1Mzc4MTIsImV4cCI6MTc0NjYyNDIxMn0.BlMWn44kQf2w_-g7P2K8Yv6RaMqGeaoV-UCJmYS7r-k
 Content-Type: multipart/form-data; boundary=boundary123
 
 --boundary123
@@ -269,6 +270,6 @@ Content-Type: image/jpeg
 --boundary123--
 
 ###
-delete http://localhost:3000/api/deliveryNote/6810d2fa777fbb7fcee3460b
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODEwYmRjOTM0YWNjZDY0MDAxZDY5ZTMiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTkyNzYyNSwiZXhwIjoxNzQ2MDE0MDI1fQ.7UfrFhebCZffKmFM6BrLsFWYu_7wMRcTsjHA8CFw_CA
+delete http://localhost:3000/api/deliveryNote/681a1ec11197300ac532e287
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODExZjgwYjMxYzdhODViYmRjZmE2YWEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDY1Mzc4MTIsImV4cCI6MTc0NjYyNDIxMn0.BlMWn44kQf2w_-g7P2K8Yv6RaMqGeaoV-UCJmYS7r-k
 Content-Type: application/json

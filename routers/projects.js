@@ -1,7 +1,15 @@
 const express = require('express');
-
+const { createProject,updateProyect,getProjects,
+    getProject,deleteProject,restoreProject
+ } = require("../controllers/projects.js")
+const {validatorRegisterProject,validatorUpdateProject} = require("../validators/projects.js")
+const { checkRol } = require("../middleware/rol.js")
+const { authMiddleware } = require("../middleware/session.js")
+const { findClientId,ClientUserStatus } = require("../middleware/findClient.js")
+const { findProyectIdParams,findProjectsId,ProjectUserStatus} = require("../middleware/findProject.js")
 const routerProject = express.Router();
 routerProject.use(express.json())
+
 
 /**
  * @swagger
@@ -12,11 +20,14 @@ routerProject.use(express.json())
 
 /**
  * @swagger
- *  /api/project:
+ *   /api/project:
  *     post:
  *       tags: [Project]
  *       summary: Crea un nuevo proyecto
- *       description: Se crea un nuevo proyecto
+ *       security:
+ *         - BearerAuth: []
+ *       description: Crea un nuevo proyecto para un cliente
+ *       operationId: createProject
  *       requestBody:
  *         required: true
  *         content:
@@ -32,14 +43,18 @@ routerProject.use(express.json())
  *           description: No autorizado
  *         403:
  *           description: Acceso prohibido
+ *     security:
+ *       - bearerAuth: []
  */
-//routerProject.post('/',validatorRegisterProject,authMiddleware,checkRol("admin"),findClientId,ClientUserStatus(true),createProject)
+routerProject.post('/',validatorRegisterProject,authMiddleware,checkRol("admin"),findClientId,ClientUserStatus(true),createProject)
 /**
  * @swagger
  *   /api/project/{id}:
  *     put:
  *       tags: [Project]
  *       summary: Actualiza un proyecto existente
+ *       security:
+ *         - BearerAuth: []
  *       description: Actualiza los detalles de un proyecto específico
  *       operationId: updateProject
  *       parameters:
@@ -69,7 +84,7 @@ routerProject.use(express.json())
  *     security:
  *       - bearerAuth: []
  */
-//routerProject.put('/:id',validatorUpdateProject,authMiddleware,checkRol("admin"),findProyectIdParams,ProjectUserStatus(true),updateProyect)
+routerProject.put('/:id',validatorUpdateProject,authMiddleware,checkRol("admin"),findProyectIdParams,ProjectUserStatus(true),updateProyect)
 
 /**
  * @swagger
@@ -77,6 +92,8 @@ routerProject.use(express.json())
  *     get:
  *       tags: [Project]
  *       summary: Obtiene todos los proyectos
+ *       security:
+ *         - BearerAuth: []
  *       description: Obtiene una lista de todos los proyectos registrados
  *       operationId: getProjects
  *       responses:
@@ -89,7 +106,7 @@ routerProject.use(express.json())
  *     security:
  *       - bearerAuth: []
  */
-//routerProject.get('/',authMiddleware,checkRol("admin"),findProjectsId,getProjects)
+routerProject.get('/',authMiddleware,checkRol("admin"),findProjectsId,getProjects)
 
 /**
  * @swagger
@@ -97,6 +114,8 @@ routerProject.use(express.json())
  *     get:
  *       tags: [Project]
  *       summary: Obtiene un proyecto por ID
+ *       security:
+ *         - BearerAuth: []
  *       description: Obtiene los detalles de un proyecto específico
  *       operationId: getProject
  *       parameters:
@@ -118,13 +137,15 @@ routerProject.use(express.json())
  *     security:
  *       - bearerAuth: []
  */
-//routerProject.get('/:id',authMiddleware,checkRol("admin"),findProyectIdParams,ProjectUserStatus(true),getProject)
+routerProject.get('/:id',authMiddleware,checkRol("admin"),findProyectIdParams,ProjectUserStatus(true),getProject)
 /**
  * @swagger
  *   /api/project/{id}:
  *     delete:
  *       tags: [Project]
  *       summary: Elimina un proyecto
+ *       security:
+ *         - BearerAuth: []
  *       description: Elimina un proyecto de forma permanente o en estado "soft delete"
  *       operationId: deleteProject
  *       parameters:
@@ -153,13 +174,15 @@ routerProject.use(express.json())
  *     security:
  *       - bearerAuth: []
  */
-//routerProject.delete('/:id',authMiddleware,checkRol("admin"),findProyectIdParams,ProjectUserStatus(true), deleteProject);
+routerProject.delete('/:id',authMiddleware,checkRol("admin"),findProyectIdParams,ProjectUserStatus(true), deleteProject);
 /**
  * @swagger
  *   /api/project/{id}:
  *     patch:
  *       tags: [Project]
  *       summary: Restaura un proyecto eliminado
+ *       security:
+ *         - BearerAuth: []
  *       description: Restaura un proyecto que ha sido eliminado anteriormente
  *       operationId: restoreProject
  *       parameters:
@@ -181,7 +204,7 @@ routerProject.use(express.json())
  *     security:
  *       - bearerAuth: []
  */
-//routerProject.patch('/:id',authMiddleware,checkRol("admin"), restoreProject);
+routerProject.patch('/:id',authMiddleware,checkRol("admin"), restoreProject);
 /**
  * @swagger
  * components:

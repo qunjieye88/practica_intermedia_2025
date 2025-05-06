@@ -79,8 +79,6 @@ const ProjectUserStatus = (status) => async (req, res, next) => {
     try {
         const userId = req.user._id;
         const project = req.project
-        console.log(req.user)
-        console.log(req.project)
 
         if (project) {
             if (userId.equals(project.userId) === status) {

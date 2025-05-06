@@ -4,6 +4,7 @@ const PDFDocument = require('pdfkit');
 const path = require('path');
 const fs = require('fs');
 const { uploadToPinata } = require("../utils/handleUploadIPFS.js");
+const { hola } = require("../utils/create.js");
 
 const createDeliveryNote = async (req, res) => {
     try {
@@ -41,7 +42,93 @@ const getDeliveryNote = async (req, res) => {
 };
 
 const createPDF = async (req, res) => {
+
+    const { id } = req.params;
+
+    const deliveryNote = await DeliveryNoteModel.findById(id)
+        .populate('userId', 'name email')
+        .populate('clientId', 'name address')
+        .populate('projectId', 'name description');
+
+    let pdfPath;
+
+    const ipfsHash = deliveryNote.sign;
+
+    const storageDir = path.join(__dirname, '..', 'storage');
+    if (ipfsHash) {
+        const response = await fetch(ipfsHash);
+        const arrayBuffer = await response.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const storageDir = path.join(__dirname, '..', 'storage');
+        const filePath = path.join(storageDir, `albaran_${id}.pdf`);
+        fs.writeFileSync(filePath, buffer);
+        return res.status(200).json({ message: 'PDF descargado de pinata', path: ipfsHash });
+    }
+
+    if (!fs.existsSync(storageDir)) {
+        fs.mkdirSync(storageDir);
+    }
+
+    pdfPath = path.join(storageDir, `albaran_${id}.pdf`);
+    const doc = new PDFDocument();
+    const writeStream = fs.createWriteStream(pdfPath);
+
+    doc.pipe(writeStream);
+    doc.fontSize(20).text('Albarán', { align: 'center' });
+
+    doc.moveDown();
+    doc.fontSize(14).text(`Usuario: ${deliveryNote.userId.name} (${deliveryNote.userId.email})`);
+    doc.text(`Cliente: ${deliveryNote.clientId.name}`);
+    doc.text(`Dirección Cliente: ${deliveryNote.clientId.address.street}, ${deliveryNote.clientId.address.city}`);
+    doc.text(`Proyecto: ${deliveryNote.projectId.name}`);
+    doc.text(`Descripción Proyecto: ${deliveryNote.projectId.description}`);
+
+    doc.moveDown();
+    doc.fontSize(16).text('Items:', { underline: true });
+    deliveryNote.items.forEach((item, index) => {
+        doc.moveDown(0.5);
+        doc.fontSize(12).text(`${index + 1}. Tipo: ${item.type}`);
+        if (item.type === 'hour') {
+            doc.text(`Horas: ${item.hours}`);
+        } else if (item.type === 'material') {
+            doc.text(`Cantidad: ${item.quantity}`);
+        }
+        doc.text(`Descripción: ${item.description || 'No disponible'}`);
+    });
+
+    doc.moveDown();
+    if (deliveryNote.sign) {
+        doc.text('Albarán firmado', { align: 'right' });
+    } else {
+        doc.text('Albarán no firmado', { align: 'right' });
+    }
+
+    doc.end();
+
+    writeStream.on('finish', async () => {
+        res.status(200).json({ message: 'PDF generado y guardado', path: `./storage/albaran_${id}.pdf` });
+    });
+
+    writeStream.on('error', (err) => {
+        res.status(500).json({ error: 'Error al guardar el PDF' });
+    });
+};
+
+
+const createSinged = async (req, res) => {
+
     try {
+        const deliveryNoteReq = req.deliveryNote;
+        const fileBuffer = req.file.buffer;
+        const fileName = req.file.originalname;
+
+        const pinataResponse = await uploadToPinata(fileBuffer, fileName);
+        const ipfsFile = pinataResponse.IpfsHash;
+        const ipfs = `https://${process.env.PINATA_GATEWAY_URL}/ipfs/${ipfsFile}`;
+
+        deliveryNoteReq.set({ sign: ipfs });
+        const updatedDeliveryNote = await deliveryNoteReq.save();
+
         const { id } = req.params;
 
         const deliveryNote = await DeliveryNoteModel.findById(id)
@@ -61,7 +148,6 @@ const createPDF = async (req, res) => {
         doc.pipe(writeStream);
 
         doc.fontSize(20).text('Albarán', { align: 'center' });
-
         doc.moveDown();
         doc.fontSize(14).text(`Usuario: ${deliveryNote.userId.name} (${deliveryNote.userId.email})`);
         doc.text(`Cliente: ${deliveryNote.clientId.name}`);
@@ -83,16 +169,31 @@ const createPDF = async (req, res) => {
         });
 
         doc.moveDown();
-        if (deliveryNote.sign) {
-            doc.text('Albarán firmado', { align: 'right' });
-        } else {
-            doc.text('Albarán no firmado', { align: 'right' });
-        }
+        doc.text('Albarán Firma');
+
+        doc.image(fileBuffer, {
+            fit: [250, 250],
+            align: 'center',
+            valign: 'center'
+        });
 
         doc.end();
 
-        writeStream.on('finish', () => {
-            res.status(200).json({ message: 'PDF generado y guardado', path: `./storage/albaran_${id}.pdf` });
+        writeStream.on('finish', async () => {
+            const pdfBuffer = fs.readFileSync(pdfPath);
+            try {
+                const pinataResponse = await uploadToPinata(pdfBuffer, `albaran_${id}.pdf`);
+                const ipfsFile = pinataResponse.IpfsHash;
+                const ipfs = `https://${process.env.PINATA_GATEWAY_URL}/ipfs/${ipfsFile}`;
+
+                deliveryNoteReq.set({ sign: ipfs });
+                const updatedDeliveryNote = await deliveryNoteReq.save();
+
+                res.status(200).json({ message: 'PDF generado y subido correctamente', deliveryNote: updatedDeliveryNote });
+
+            } catch (err) {
+                res.status(500).json({ error: 'Error al subir a Pinata' });
+            }
         });
 
         writeStream.on('error', (err) => {
@@ -100,22 +201,8 @@ const createPDF = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al generar el PDF' });
+        res.status(500).json({ error: error.message });
     }
-};
-
-
-const createSinged = async (req, res) => {
-    const deliveryNote = req.deliveryNote
-    const fileBuffer = req.file.buffer
-    const fileName = req.file.originalname
-    const pinataResponse = await uploadToPinata(fileBuffer, fileName)
-    const ipfsFile = pinataResponse.IpfsHash
-    const ipfs = `https://${process.env.PINATA_GATEWAY_URL}/ipfs/${ipfsFile}`
-    deliveryNote.set({ sign: ipfs });
-    const updatedDeliveryNote = await deliveryNote.save();
-    res.send({ deliveryNote: updatedDeliveryNote })
 }
 
 const deleteDeliveryNote = async (req, res) => {
@@ -132,6 +219,8 @@ const deleteDeliveryNote = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+
 module.exports = {
     createDeliveryNote, getDeliveryNotes, getDeliveryNote,
     createPDF, createSinged, deleteDeliveryNote

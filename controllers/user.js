@@ -3,12 +3,12 @@ const { matchedData } = require("express-validator")
 const { encrypt, compare } = require("../utils/handlePassword")
 const { tokenSign } = require("../utils/handleJwt.js")
 const { uploadToPinata } = require("../utils/handleUploadIPFS.js");
-
+const { sendEmail } = require('../utils/handleEmail')
 const registerCtrl = async (req, res) => {//hecho
     try {
         req = matchedData(req);
         const email = req.email;
-        const user = await UserModel.findOne({email: email });
+        const user = await UserModel.findOne({ email: email });
         if (user) {
             res.status(409).json({ error: "El correo ya está registrado" });
         } else {
@@ -26,6 +26,13 @@ const registerCtrl = async (req, res) => {//hecho
                 }
             };
             console.log("Código de verificación:", emailCode);
+            const emailData = {
+                from: process.env.EMAIL,
+                to: newUser.email,
+                subject: emailCode,
+                text: `Tu código de verificación es: ${emailCode}`
+            };
+            sendEmail(emailData)
             res.status(201).send(data);
 
         }

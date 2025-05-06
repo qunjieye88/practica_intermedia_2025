@@ -29,6 +29,8 @@ reouterDeliveryNote.use(express.json())
  *     post:
  *       tags: [DeliveryNote]
  *       summary: Crea una nueva nota de entrega
+ *       security:
+ *         - BearerAuth: []
  *       description: Crea una nueva nota de entrega para un cliente y un proyecto
  *       operationId: createDeliveryNote
  *       requestBody:
@@ -57,6 +59,8 @@ reouterDeliveryNote.post('/', createDeliveryNoteValidator, authMiddleware, check
  *     get:
  *       tags: [DeliveryNote]
  *       summary: Obtiene todas las notas de entrega
+ *       security:
+ *         - BearerAuth: []
  *       description: Obtiene todas las notas de entrega asociadas al usuario
  *       operationId: getDeliveryNotes
  *       responses:
@@ -76,6 +80,8 @@ reouterDeliveryNote.get('/', authMiddleware, checkRol("admin"), findAllDeliveriN
  *     get:
  *       tags: [DeliveryNote]
  *       summary: Obtiene una nota de entrega por ID
+ *       security:
+ *         - BearerAuth: []
  *       description: Obtiene los detalles de una nota de entrega específica por ID
  *       operationId: getDeliveryNote
  *       parameters:
@@ -105,6 +111,8 @@ reouterDeliveryNote.get('/:id', authMiddleware, checkRol("admin"), findDeliveriN
  *     get:
  *       tags: [DeliveryNote]
  *       summary: Genera un PDF de la nota de entrega
+ *       security:
+ *         - BearerAuth: []
  *       description: Genera un archivo PDF para una nota de entrega específica
  *       operationId: createPDF
  *       parameters:
@@ -134,6 +142,8 @@ reouterDeliveryNote.get('/pdf/:id', authMiddleware, checkRol("admin"), findDeliv
  *     patch:
  *       tags: [DeliveryNote]
  *       summary: Firma una nota de entrega
+ *       security:
+ *         - BearerAuth: []
  *       description: Añade una firma a una nota de entrega específica
  *       operationId: createSinged
  *       parameters:
@@ -176,6 +186,8 @@ reouterDeliveryNote.patch('/sign/:id', uploadMiddlewareMemory.single("image"), a
  *     delete:
  *       tags: [DeliveryNote]
  *       summary: Elimina una nota de entrega
+ *       security:
+ *         - BearerAuth: []
  *       description: Elimina una nota de entrega específica
  *       operationId: deleteDeliveryNote
  *       parameters:

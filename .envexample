@@ -17,3 +17,5 @@ JWT = token de jwt
 api_key= llave de jwt
 
 JWT_SECRET = llave privada de jwt
+
+SLACK_WEBHOOK = ruta del slack

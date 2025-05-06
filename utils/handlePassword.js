@@ -11,7 +11,4 @@ const compare = async (clearPassword, hashedPassword) => {
     return result
 }
 
-const hola = ()=>{
-    console.log("hola")
-}
-module.exports = { encrypt, compare,hola }
+module.exports = { encrypt, compare }

@@ -1,5 +1,7 @@
 const { check } = require("express-validator")
 const validateResults = require("../utils/handleValidator")
+
+
 const createValidator = [
     check("name").exists().notEmpty(),
     check("cif").exists().notEmpty().isLength({ min: 9, max: 9 }),

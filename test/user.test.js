@@ -1,3 +1,5 @@
+const objeto = require("../utils/handleEmail.js");
+const spy = jest.spyOn(objeto, "sendEmail").mockImplementation()
 const supertest = require('supertest')
 const { app, server } = require('../app.js')
 const mongoose = require('mongoose');
@@ -49,6 +51,7 @@ it('post http://localhost:3000/api/user/register usuario registrado sin errores'
         .expect('Content-Type', /application\/json/);
     expect(response.body).toHaveProperty('token');
     expect(response.body).toHaveProperty('user');
+    expect(spy).toHaveBeenCalled();
 });
 
 //put http://localhost:3000/api/user/validation

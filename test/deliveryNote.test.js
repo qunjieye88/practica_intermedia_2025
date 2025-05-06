@@ -7,7 +7,6 @@ const ProjectModel = require("../models/projects.js");
 const DeliveryNoteModel = require("../models/deliveryNote.js");
 const { tokenSign } = require("../utils/handleJwt.js")
 const { createClient, createUser, createProject, createDeliveryNote } = require("../utils/create.js")
-const path = require('path');
 const api = supertest(app);
 
 beforeAll(async () => {
@@ -560,7 +559,7 @@ it('get http://localhost:3000/api/deliveryNote/pdf/:id sin errores', async () =>
 });
 
 ////Listar albaranes: patch /api/deliverynote/sign/:Id
-/*
+
 it('patch http://localhost:3000/api/deliveryNote/sign/:id error: albaran no pertenece a usuario', async () => {
     const num = 28
     const user = await createUser(num);
@@ -572,11 +571,10 @@ it('patch http://localhost:3000/api/deliveryNote/sign/:id error: albaran no pert
     const response = await api
         .patch(`/api/deliveryNote/sign/${deleteDeliveryNote._id}`)
         .set('Authorization', `Bearer ${token}`)
-        .attach('file', path.join(__dirname, 'firma.jpg'))
+        .attach('image', 'firma.jpg')
         .expect(400)
     expect(response.body.error).toBe("El Albaran No Pertenece Al Clinte");
 });
-
 it('patch http://localhost:3000/api/deliveryNote/sign/:id error: falta token', async () => {
     const num = 29
     const user = await createUser(num);
@@ -586,7 +584,7 @@ it('patch http://localhost:3000/api/deliveryNote/sign/:id error: falta token', a
     const token = await tokenSign({ _id: user._id, role: user.role })
     const response = await api
         .patch(`/api/deliveryNote/sign/${deleteDeliveryNote._id}`)
-        .attach('file', path.join(__dirname, 'firma.jpg'))
+        .attach('image', 'firma.jpg')
         .expect(401)
         .expect('Content-Type', /application\/json/);
     expect(response.body.error).toBe('NO TOKEN');
@@ -602,7 +600,7 @@ it('patch http://localhost:3000/api/deliveryNote/sign/:id error: token mal escri
     const response = await api
         .patch(`/api/deliveryNote/sign/${deleteDeliveryNote._id}`)
         .set('Authorization', `Bearer ${token}s`)
-        .attach('file', path.join(__dirname, 'firma.jpg'))
+        .attach('image', 'firma.jpg')
         .expect(403)
         .expect('Content-Type', /application\/json/);
     expect(response.body.error).toBe("Error de autenticacion");
@@ -620,7 +618,7 @@ it('patch http://localhost:3000/api/deliveryNote/sign/:id error: sin permisos', 
     const response = await api
         .patch(`/api/deliveryNote/sign/${deleteDeliveryNote._id}`)
         .set('Authorization', `Bearer ${token}`)
-        .attach('file', path.join(__dirname, 'firma.jpg'))
+        .attach('image', 'firma.jpg')
         .expect(403)
         .expect('Content-Type', /application\/json/);
     expect(response.body.error).toBe("ERROR PERMISO");
@@ -636,7 +634,7 @@ it('patch http://localhost:3000/api/deliveryNote/sign/:id error: id incorrecto',
     const response = await api
         .patch(`/api/deliveryNote/sign/${deliveryNote._id}s`)
         .set('Authorization', `Bearer ${token}`)
-        .attach('file', path.join(__dirname, 'firma.jpg'))
+        .attach('image', 'firma.jpg')
         .expect(400)
         .expect('Content-Type', /application\/json/);
     expect(response.body.error).toBe("ID inválido");
@@ -652,13 +650,11 @@ it('patch http://localhost:3000/api/deliveryNote/sign/:id sin errores', async ()
     const response = await api
         .patch(`/api/deliveryNote/sign/${deliveryNote._id}`)
         .set('Authorization', `Bearer ${token}`)
-        .attach('file', path.join(__dirname, 'firma.jpg'))
+        .attach('image', 'firma.jpg')
         .expect(200)
         .expect('Content-Type', /application\/json/);
-    expect(response.body).toHaveProperty('message');
-});*/
+});
 
-/*
 it('delete http://localhost:3000/api/deliveryNote/:id error: albaran no pertenece a usuario', async () => {
     const num = 34
     const user = await createUser(num);
@@ -673,7 +669,7 @@ it('delete http://localhost:3000/api/deliveryNote/:id error: albaran no pertenec
         .expect(400)
         .expect('Content-Type', /application\/json/);
     expect(response.body.error).toBe("El Albaran No Pertenece Al Clinte");
-});*/
+});
 
 // delete http://localhost:3000/api/deliveryNote/:id
 
@@ -768,6 +764,7 @@ it('delete http://localhost:3000/api/deliveryNote/:id sin errores', async () => 
         .expect(200)
         .expect('Content-Type', /application\/json/);
     expect(response.body.message).toBe('Albaran eliminado permanentemente (hard delete)');
+
 
 });
 
